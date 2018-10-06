@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassLibrary1
+namespace DigitalPlatform.Core
 {
     public class Class1
     {
