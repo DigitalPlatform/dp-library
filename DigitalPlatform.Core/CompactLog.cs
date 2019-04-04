@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DigitalPlatform.Core
 {
+    // 注：代码从 chord 项目 DigitalPlatform.Common 复制过来
     /// <summary>
     /// 紧凑型日志。用于可能泛滥的日志场合
     /// </summary>
@@ -53,9 +54,10 @@ namespace DigitalPlatform.Core
         }
 
         // 把累积的条目一次性写入日志文件
-        public void WriteToLog(delegate_writeLog func_writeLog)
+        public int WriteToLog(delegate_writeLog func_writeLog)
         {
-            List<string> keys = new List<string>();
+            int count = 0;
+            // List<string> keys = new List<string>();
             _lock.EnterReadLock();
             try
             {
@@ -64,7 +66,7 @@ namespace DigitalPlatform.Core
                     CompactEntry entry = _table[key];
                     lock (entry)
                     {
-                        entry.WriteToLog(func_writeLog);
+                        count += entry.WriteToLog(func_writeLog);
                     }
                 }
             }
@@ -73,6 +75,7 @@ namespace DigitalPlatform.Core
                 _lock.ExitReadLock();
             }
 
+#if NO
             _lock.EnterWriteLock();
             try
             {
@@ -85,6 +88,9 @@ namespace DigitalPlatform.Core
             {
                 _lock.ExitWriteLock();
             }
+#endif
+
+            return count;
         }
     }
 
@@ -115,11 +121,11 @@ namespace DigitalPlatform.Core
             TotalCount++;
         }
 
-        public void WriteToLog(delegate_writeLog func_writeLog,
+        public int WriteToLog(delegate_writeLog func_writeLog,
             string style = "display")
         {
             if (this.Datas.Count == 0)
-                return;
+                return 0;
 
             if (style == "display")
             {
@@ -154,8 +160,10 @@ namespace DigitalPlatform.Core
                     text.Append("... (余下 " + (this.TotalCount - i) + " 项被略去)");
                 func_writeLog(text.ToString());
             }
+            int count = (int)this.TotalCount;
             this.Datas.Clear(); // 写入日志后，清除内存
             this.TotalCount = 0;
+            return count;
         }
     }
 
