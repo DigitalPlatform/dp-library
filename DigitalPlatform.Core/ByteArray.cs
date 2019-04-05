@@ -12,6 +12,23 @@ namespace DigitalPlatform
     // byte[] 数组的实用函数集
     public class ByteArray
     {
+        // 从 source 头部移走一段。source 随后被改变
+        public static byte[] Remove(ref byte[] source, int length)
+        {
+            if (length > source.Length)
+                length = source.Length;
+
+            byte[] result = new byte[length];
+            Array.Copy(source, result, length);
+            int rest = source.Length - length;
+            byte[] temp = new byte[rest];
+            if (rest > 0)
+                Array.Copy(source, length, temp, 0, rest);
+
+            source = temp;
+            return result;
+        }
+
         // 安全版本
         // 在缓冲区尾部追加若干字节
         public static byte[] SafeAdd(byte[] source,
