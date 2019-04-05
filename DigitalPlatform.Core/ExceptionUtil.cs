@@ -142,4 +142,11 @@ Stack:
         }
     }
 
+    public class InterruptException : Exception
+    {
+        public InterruptException(string s)
+            : base(s)
+        {
+        }
+    }
 }
