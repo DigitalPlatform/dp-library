@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace DigitalPlatform.Core
+namespace DigitalPlatform.Script
 {
     /// <summary>
     /// ISBN号分析器，帮助插入'-'
