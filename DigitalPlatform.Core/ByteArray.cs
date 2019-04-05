@@ -6,11 +6,48 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace DigitalPlatform.Core
+// ByteArray 类很常用，名字空间直接用 DigitalPlatform
+namespace DigitalPlatform
 {
     // byte[] 数组的实用函数集
     public class ByteArray
     {
+        // 安全版本
+        // 在缓冲区尾部追加若干字节
+        public static byte[] SafeAdd(byte[] source,
+            byte[] v,
+            int nMaxBytes)
+        {
+            int nIndex = -1;
+            if (source != null)
+            {
+                if (nMaxBytes != -1 && source.Length > nMaxBytes)
+                    throw new Exception("source.Length:" + source.Length + " 超过极限尺寸 nMaxBytes:" + nMaxBytes);
+
+                nIndex = source.Length;
+
+                if (nMaxBytes != -1 && source.Length + v.Length > nMaxBytes)
+                    throw new Exception("(source.Length:" + source.Length + " + v.Length:" + v.Length + ") 超过极限尺寸 nMaxBytes:" + nMaxBytes);
+
+                source = EnsureSize(source, source.Length + v.Length);
+            }
+            else
+            {
+                // 2011/1/22
+                if (v == null)
+                    return null;
+
+                if (nMaxBytes != -1 && v.Length > nMaxBytes)
+                    throw new Exception("v.Length:" + v.Length + " 超过极限尺寸 nMaxBytes:" + nMaxBytes);
+
+                nIndex = 0;
+                source = EnsureSize(source, v.Length);
+            }
+
+            Array.Copy(v, 0, source, nIndex, v.Length);
+            return source;
+        }
+
         /*
         // 复制一个byte数组
         public static byte[] Dup(byte [] source)

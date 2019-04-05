@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace DigitalPlatform.Core
+// ExceptionUtil 类太常用了，所以直接使用名字空间 DigitalPlatform
+namespace DigitalPlatform
 {
     /// <summary>
     /// 和异常处理有关的实用函数
