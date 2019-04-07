@@ -16,6 +16,43 @@ namespace DigitalPlatform.Text
 {
     public class StringUtil
     {
+        public static long TryGetSubInt64(string strText,
+char seperator,
+int index,
+long default_value = 0)
+        {
+            try
+            {
+                return GetSubInt64(strText, seperator, index, default_value);
+            }
+            catch
+            {
+                return default_value;
+            }
+        }
+
+        // exception:
+        //      抛出 Int64.Parse() 要抛出的那些异常
+        public static long GetSubInt64(string strText,
+            char seperator,
+            int index,
+            long default_value = 0)
+        {
+            string str_value = GetSubString(strText, seperator, index);
+            if (string.IsNullOrEmpty(str_value) == true)
+                return default_value;
+
+            return Int64.Parse(str_value);
+        }
+
+        public static string GetSubString(string strText, char seperator, int index)
+        {
+            string[] parts = strText.Split(new char[] { seperator });
+            if (index >= parts.Length)
+                return null;
+            return parts[index];
+        }
+
         // 从 binding 字符串中寻找特定名字的 binding
         public static string GetOneBinding(string strText, string strName)
         {
