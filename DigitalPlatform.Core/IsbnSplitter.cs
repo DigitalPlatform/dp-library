@@ -152,7 +152,7 @@ namespace DigitalPlatform.Script
                     if (c != strSource[9])
                         return false;
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
                     return false;
                 }
@@ -609,7 +609,7 @@ namespace DigitalPlatform.Script
             strError = "";
 
             string strSource;
-            int nSecondLen;
+            // int nSecondLen;
 
             // Debug.Assert(false, "");
 

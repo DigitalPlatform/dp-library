@@ -565,7 +565,7 @@ namespace DigitalPlatform.Z3950
                 else
                 {
                     throw new ArgumentException("InitRequest() 出现了无法支持的 struInit_request.m_nAuthenticationMethod (" + struInit_request.m_nAuthenticationMethod + ")");
-                    Debug.Assert(false, "");
+                    // Debug.Assert(false, "");
                 }
             }
 
@@ -738,7 +738,6 @@ otherInfo {
             BerNode root = null;
             BerNode subroot = null;
             // int i,nMax;
-            int nRet;
 
             root = this.m_RootNode.NewChildConstructedNode(z3950_searchRequest,
                 BerNode.ASN1_CONTEXT);
@@ -2680,7 +2679,7 @@ http://www.lists.ufl.edu/cgi-bin/wa?A2=ind9506&L=z3950iw&D=0&X=5BD6A0503A7D1E026
             if (this.EncodingLevelOID != CharsetNeogatiation.Utf8OID)
             {
                 throw new Exception("目前尚不支持请求utf-8以外的编码方式");
-                return;
+                // return;
             }
 
             // SEQUENCE

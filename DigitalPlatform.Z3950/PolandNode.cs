@@ -587,7 +587,7 @@ namespace DigitalPlatform.Z3950
                     if (nRet == -1)
                     {
                         throw new Exception("HandleOperand Fail!");
-                        return null;
+                        // return null;
                     }
                 }
                 else
@@ -633,7 +633,7 @@ namespace DigitalPlatform.Z3950
             if (nRet == -1)
             {
                 throw new Exception("BuildOperand fail!");
-                return -1;
+                // return -1;
             }
 
             PushToArray(param);

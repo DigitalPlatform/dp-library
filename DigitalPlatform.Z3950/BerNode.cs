@@ -257,8 +257,8 @@ namespace DigitalPlatform.Z3950
             {
                 // 2018/9/28
                 throw new Exception("ChangeIntegerOrder() 出现不支持的整数长度 " + baData.Count);
-                Debug.Assert(false, "不支持的整数长度 " + baData.Count);
-                return;
+                // Debug.Assert(false, "不支持的整数长度 " + baData.Count);
+                // return;
             }
 
             baData = baTemp;
