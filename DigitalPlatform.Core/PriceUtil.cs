@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace DigitalPlatform.Core
+namespace DigitalPlatform.Text
 {
     public class PriceUtil
     {
