@@ -37,6 +37,9 @@ namespace DigitalPlatform.Z3950
         public bool IsbnRemoveHyphen = false;
         public bool IsbnWild = false;
 
+        // 2019/4/13
+        public bool IssnForce8 = false;
+
         public Encoding DefaultRecordsEncoding = Encoding.GetEncoding(936);
         public Encoding DefaultQueryTermEncoding = Encoding.GetEncoding(936);
 
