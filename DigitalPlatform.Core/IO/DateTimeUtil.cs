@@ -11,6 +11,18 @@ namespace DigitalPlatform.IO
     /// </summary>
     public class DateTimeUtil
     {
+        public static string ToLocalTime(string strRfc1123, string strFormat)
+        {
+            try
+            {
+                return Rfc1123DateTimeStringToLocal(strRfc1123, strFormat);
+            }
+            catch (Exception ex)
+            {
+                return "时间字符串 '" + strRfc1123 + "' 格式不正确: " + ex.Message;
+            }
+        }
+
         // 分析期限参数
         public static int ParsePeriodUnit(string strPeriod,
             string strDefaultUnit,
