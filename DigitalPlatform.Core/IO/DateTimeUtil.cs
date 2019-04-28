@@ -11,6 +11,12 @@ namespace DigitalPlatform.IO
     /// </summary>
     public class DateTimeUtil
     {
+        // 日期转换成yyyy-MM-dd HH:mm:ss格式字符串
+        public static string DateTimeToString(DateTime time)
+        {
+            return time.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
         public static string ToLocalTime(string strRfc1123, string strFormat)
         {
             try
