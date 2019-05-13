@@ -612,6 +612,36 @@ namespace DigitalPlatform.Z3950
                     continue;
                 }
 
+                // 对 ISSN 检索词进行预处理
+                if (strFrom == "ISSN"
+                    && isbnconvertinfo != null)
+                {
+
+                    // result.Value:
+                    //      -1  出错
+                    //      0   没有必要转换
+                    //      1   已经转换
+                    Result result = isbnconvertinfo.ConvertISSN(strWord,
+                        out List<string> isbns);
+                    if (result.Value == -1)
+                        return new Result { Value = -1, ErrorInfo = "在处理ISBN字符串 '" + strWord + "' 过程中出错: " + result.ErrorInfo };
+
+                    // 如果一个 ISBN 变成了多个 ISBN，要构造为 OR 方式的检索式。但遗憾的是可能有些 Z39.50 服务器并不支持 OR 运算检索
+                    int j = 0;
+                    foreach (string isbn in isbns)
+                    {
+                        if (j > 0)
+                            strQueryString += " OR ";
+                        // string strIsbn = isbn.Replace("\"", "\\\"");    // 字符 " 替换为 \"
+                        string strIsbn = StringUtil.EscapeString(isbn, "\"/=");    // eacape 特殊字符
+                        strQueryString += "\""
+                            + strIsbn + "\"" + "/1="
+                            + strValue;
+                        j++;
+                    }
+                    continue;
+                }
+
                 // strWord = strWord.Replace("\"", "\\\""); // 字符 " 替换为 \"
                 strWord = StringUtil.EscapeString(strWord, "\"/=");    // eacape 特殊字符
                 strQueryString += "\""
