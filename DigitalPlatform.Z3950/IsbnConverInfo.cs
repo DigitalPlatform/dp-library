@@ -225,6 +225,52 @@ namespace DigitalPlatform.Z3950
                 return new Result { Value = 1 };
             }
 
+            if (isbns.Count == 0)
+                isbns.Add(strISBN);
+
+            return new Result();
+        }
+
+        // result.Value:
+        //      -1  出错
+        //      0   没有必要转换
+        //      1   已经转换
+        public Result ConvertISSN(string strISSN,
+            out List<string> issns)
+        {
+            issns = new List<string>();
+
+            if (string.IsNullOrEmpty(this.ConvertStyle) == true)
+            {
+                issns.Add(strISSN);
+                return new Result();
+            }
+
+            // ISSN，强制转换为 8 数字形态 xxxx-xxxx
+            bool bForce8 = StringUtil.IsInList("force8", this.ConvertStyle);
+
+            int nRet = 0;
+
+            if (bForce8)
+            {
+                // return:
+                //      -1:出错; 
+                //      0:未修改校验位;
+                //      1:修改了校验位
+                nRet = IsbnSplitter.IssnInsertHyphen(
+                    strISSN,
+                    "force8",
+                    out string strTarget,
+                    out string strError);
+                if (nRet == -1)
+                    return new Result { Value = -1, ErrorInfo = strError };
+                issns.Add(strTarget);
+                return new Result { Value = nRet, ErrorInfo = strError };
+            }
+
+            if (issns.Count == 0)
+                issns.Add(strISSN);
+
             return new Result();
         }
     }
