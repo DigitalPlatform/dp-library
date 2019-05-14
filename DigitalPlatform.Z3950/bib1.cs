@@ -25,7 +25,8 @@ namespace DigitalPlatform.Z3950
         {
             for (int i = 0; i < this.Count; i++)
             {
-                if (this[i].Name.Trim() == strName.Trim())
+                // 2019/5/14 增加 ToLower()
+                if (this[i].Name.Trim().ToLower() == strName.Trim().ToLower())
                     return this[i].Value;
             }
 
