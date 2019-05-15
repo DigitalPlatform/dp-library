@@ -28,6 +28,7 @@ namespace DigitalPlatform.Core
 
         public ConfigSetting(string filename, bool auto_create)
         {
+#if NO
             try
             {
                 _dom.Load(filename);
@@ -39,6 +40,10 @@ namespace DigitalPlatform.Core
                 else
                     throw;
             }
+#endif
+            SafeLoad(_dom,
+    filename,
+    auto_create);
 
             _filename = filename;
         }
@@ -100,7 +105,70 @@ namespace DigitalPlatform.Core
         public void Save()
         {
             if (string.IsNullOrEmpty(_filename) == false)
-                _dom.Save(_filename);
+            {
+                // _dom.Save(_filename);
+                SafeSave(_dom, _filename);
+            }
+        }
+
+        public void SafeLoad(XmlDocument dom,
+            string filename,
+            bool auto_create)
+        {
+            var directory = Path.GetDirectoryName(filename);
+            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + ".save");
+
+            // 2019/5/15
+            FileInfo fi = new FileInfo(filename);
+            if (File.Exists(filename) && fi.Length == 0
+                && File.Exists(backupFileName))
+            {
+                // 尝试从备份文件装载
+                dom.Load(backupFileName);
+                return;
+            }
+
+            try
+            {
+                dom.Load(filename);
+            }
+            catch (FileNotFoundException)
+            {
+                if (auto_create)
+                    _dom.LoadXml("<root />");
+                else
+                    throw;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw;
+            }
+            catch
+            {
+                // 尝试从备份文件装载
+                if (File.Exists(backupFileName))
+                    dom.Load(backupFileName);
+                else
+                    throw;
+            }
+        }
+
+        public static void SafeSave(XmlDocument dom, string filename)
+        {
+            // 临时备份一个原来文件，避免保存中途出错造成 0 bytes 的文件
+            var directory = Path.GetDirectoryName(filename);
+            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + ".save");
+            if (File.Exists(filename))
+                File.Copy(filename, backupFileName, true);
+            else
+                backupFileName = null;
+
+            // 进行保存
+            dom.Save(filename);
+
+            // 如果保存成功，则删除临时备份文件
+            if (string.IsNullOrEmpty(backupFileName) == false)
+                File.Delete(backupFileName);
         }
 
         public string Dump()
