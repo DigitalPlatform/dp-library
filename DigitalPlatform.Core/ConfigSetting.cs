@@ -111,12 +111,14 @@ namespace DigitalPlatform.Core
             }
         }
 
+        public const string BACKUP_EXTENSION = ".~backup";
+
         public void SafeLoad(XmlDocument dom,
             string filename,
             bool auto_create)
         {
             var directory = Path.GetDirectoryName(filename);
-            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + ".save");
+            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
 
             // 2019/5/15
             FileInfo fi = new FileInfo(filename);
@@ -157,7 +159,7 @@ namespace DigitalPlatform.Core
         {
             // 临时备份一个原来文件，避免保存中途出错造成 0 bytes 的文件
             var directory = Path.GetDirectoryName(filename);
-            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + ".save");
+            var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
             if (File.Exists(filename))
                 File.Copy(filename, backupFileName, true);
             else
