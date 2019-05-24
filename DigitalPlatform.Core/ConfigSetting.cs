@@ -157,6 +157,19 @@ namespace DigitalPlatform.Core
 
         public static void SafeSave(XmlDocument dom, string filename)
         {
+            var directory = Path.GetDirectoryName(filename);
+            var tempFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
+
+            // 先保存到临时文件
+            dom.Save(tempFileName);
+            // 删除正式文件
+            File.Delete(filename);
+            // 临时文件改名为正式文件
+            File.Move(tempFileName, filename);
+        }
+#if NO
+        public static void SafeSave(XmlDocument dom, string filename)
+        {
             // 临时备份一个原来文件，避免保存中途出错造成 0 bytes 的文件
             var directory = Path.GetDirectoryName(filename);
             var backupFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
@@ -172,7 +185,7 @@ namespace DigitalPlatform.Core
             if (string.IsNullOrEmpty(backupFileName) == false)
                 File.Delete(backupFileName);
         }
-
+#endif
         public string Dump()
         {
             StringBuilder text = new StringBuilder();
