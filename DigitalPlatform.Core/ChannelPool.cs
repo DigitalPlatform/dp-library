@@ -21,6 +21,24 @@ namespace DigitalPlatform.Core
 
         public delegate T delegate_newChannel();
 
+        // 空闲的通道数量
+        public int IdleCount
+        {
+            get
+            {
+                return _idleChannels.Count;
+            }
+        }
+
+        // 正在使用状态的通道数量
+        public int UsedCount
+        {
+            get
+            {
+                return _usedChannels.Count;
+            }
+        }
+
         public T GetChannel(delegate_newChannel func_new)
         {
             _lock.EnterWriteLock();
