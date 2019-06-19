@@ -67,7 +67,8 @@ namespace DigitalPlatform.Core
 
             string old_value = element.GetAttribute(entry);
             element.SetAttribute(entry, value);
-            _changed = true;
+            if (old_value != value) // 2019/6/19
+                _changed = true;
             return old_value;
         }
 
