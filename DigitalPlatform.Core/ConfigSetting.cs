@@ -102,12 +102,34 @@ namespace DigitalPlatform.Core
             Set(section, entry, value.ToString());
         }
 
+        // 2019/6/19
+        public bool GetBoolean(string section,
+    string entry,
+    bool default_value)
+        {
+            int value = GetInt(section, entry, default_value ? 1 : 0);
+            return value == 0 ? false : true;
+        }
+
+        // 2019/6/19
+        public void SetBoolean(string section,
+string entry,
+bool value)
+        {
+            SetInt(section, entry, value ? 1 : 0);
+        }
+
         public void Save()
         {
             if (string.IsNullOrEmpty(_filename) == false)
             {
                 // _dom.Save(_filename);
                 SafeSave(_dom, _filename);
+                _changed = false;
+            }
+            else
+            {
+                // TODO: 是否抛出异常?
             }
         }
 
@@ -128,6 +150,7 @@ namespace DigitalPlatform.Core
                 {
                     // 尝试从备份文件装载
                     dom.Load(backupFileName);
+                    _changed = true;
                     return;
                 }
 
@@ -135,6 +158,7 @@ namespace DigitalPlatform.Core
                 // 当作新文件进行加载。增加系统抗毁坏性
                 // TODO: 是否要把这种情况反馈给调主？
                 _dom.LoadXml("<root />");
+                _changed = true;
                 return;
             }
 
@@ -145,7 +169,10 @@ namespace DigitalPlatform.Core
             catch (FileNotFoundException)
             {
                 if (auto_create)
+                {
                     _dom.LoadXml("<root />");
+                    _changed = true;
+                }
                 else
                     throw;
             }
@@ -157,7 +184,10 @@ namespace DigitalPlatform.Core
             {
                 // 尝试从备份文件装载
                 if (File.Exists(backupFileName))
+                {
                     dom.Load(backupFileName);
+                    _changed = true;
+                }
                 else
                     throw;
             }
