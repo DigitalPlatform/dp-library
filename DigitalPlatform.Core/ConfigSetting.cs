@@ -122,11 +122,19 @@ namespace DigitalPlatform.Core
 
             // 2019/5/15
             FileInfo fi = new FileInfo(filename);
-            if (File.Exists(filename) && fi.Length == 0
-                && File.Exists(backupFileName))
+            if (File.Exists(filename) && fi.Length == 0)
             {
-                // 尝试从备份文件装载
-                dom.Load(backupFileName);
+                if (File.Exists(backupFileName))
+                {
+                    // 尝试从备份文件装载
+                    dom.Load(backupFileName);
+                    return;
+                }
+
+                // 2019/6/19
+                // 当作新文件进行加载。增加系统抗毁坏性
+                // TODO: 是否要把这种情况反馈给调主？
+                _dom.LoadXml("<root />");
                 return;
             }
 
