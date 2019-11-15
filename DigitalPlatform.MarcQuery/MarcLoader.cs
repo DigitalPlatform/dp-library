@@ -632,6 +632,13 @@ namespace DigitalPlatform.Marc
             strErrorInfo = "";
             aResult = new List<byte[]>();
 
+            // 2019/11/15
+            if (s == null)
+            {
+                strErrorInfo = "空记录(s==null)";
+                return -1;
+            }
+
             Debug.Assert(s != null, "");
 
             List<MyByteList> results = new List<MyByteList>();
