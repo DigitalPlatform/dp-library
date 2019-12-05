@@ -138,7 +138,7 @@ namespace DigitalPlatform.Script
         {
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
-            strSource = strSource.Replace("-", "").Trim();
+            strSource = strSource.Replace("-", "").Replace(" ","").Trim();
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
 
@@ -471,7 +471,7 @@ namespace DigitalPlatform.Script
             string strTemp = strPrefix + strSource;
             foreach (XmlElement prefix in prefix_nodes)
             {
-                string strCurrent = prefix.InnerText.Trim().Replace("-", "");
+                string strCurrent = prefix.InnerText.Trim().Replace("-", "").Replace(" ", "");
                 if (strTemp.StartsWith(strCurrent) == true)
                 {
                     hit_prefix = prefix;
@@ -802,7 +802,7 @@ namespace DigitalPlatform.Script
         // 3)重新计算校验位
         public static string GetISBnBarcode(string strPureISBN)
         {
-            string strText = strPureISBN.Replace("-", "");
+            string strText = strPureISBN.Replace("-", "").Replace(" ", "");
             if (strText.Length < 3)
                 return strText; // error
 
@@ -835,7 +835,7 @@ namespace DigitalPlatform.Script
         {
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
-            strSource = strSource.Replace("-", "").Trim();
+            strSource = strSource.Replace("-", "").Replace(" ", "").Trim();
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
 
