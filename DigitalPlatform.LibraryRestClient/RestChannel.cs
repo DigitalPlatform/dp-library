@@ -20,40 +20,316 @@ namespace DigitalPlatform.LibraryRestClient
     /// <summary>
     /// 通讯通道
     /// </summary>
-    public class LibraryChannel
+    public class RestChannel
     {
 
 
-        /// <summary>
         /// dp2Library 服务器的 URL
-        /// </summary>
-        public string Url = "";
-        public string UserName = "";
-        public string Password = "";
-        public string Parameters = "";
+        public string Url { get; set; }
+        public string UserName { get; set; }
+
+        //public string Password = "";
+        //public string Parameters = "";
 
         /// <summary>
         /// 当前通道所使用的 HTTP Cookies
         /// </summary>
-        public CookieContainer Cookies = new System.Net.CookieContainer();
-
-        /// <summary>
-        /// 当前通道的登录前事件
-        /// </summary>
-        public event BeforeLoginEventHandle BeforeLogin;
-
-        /// <summary>
-        /// 空闲事件
-        /// </summary>
-        public event IdleEventHandler Idle = null;
+        private CookieContainer Cookies = new System.Net.CookieContainer();
 
         // 重登录次数
         int _loginCount = 0;
 
         /// <summary>
-        /// 最近一次调用从 dp2Library 返回的错误码
+        /// 按需登录,当前通道的登录前事件
         /// </summary>
-        public ErrorCode ErrorCode = ErrorCode.NoError;
+        public event BeforeLoginEventHandle BeforeLogin;
+
+        ///// <summary>
+        ///// 空闲事件
+        ///// </summary>
+        public event IdleEventHandler Idle = null;
+
+
+
+
+        ///// <summary>
+        ///// 最近一次调用从 dp2Library 返回的错误码
+        ///// </summary>
+        //public ErrorCode ErrorCode = ErrorCode.NoError;
+
+        // 关闭通道
+        public void Close()
+        {
+            // 调logout接口
+            this.Logout();
+        }
+
+
+
+
+
+        // return:
+        //      -1  error
+        //      0   dp2Library的版本号过低。警告信息在strError中
+        //      1   dp2Library版本号符合要求
+        public GetVersionResponse GetVersion()
+        {
+            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+
+            byte[] data = new byte[0];
+            byte[] result = client.UploadData(GetRestfulApiUrl("getversion"),
+                    "POST",
+                    data);
+
+            string strResult = Encoding.UTF8.GetString(result);
+            GetVersionResponse response = Deserialize<GetVersionResponse>(strResult);
+            return response;
+        }
+
+        #region 登录相关函数
+
+        /// <summary>
+        /// 登出
+        /// </summary>
+        /// <returns></returns>
+        public LogoutResponse Logout()
+        {
+            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+
+            byte[] data = new byte[0];
+            byte[] result = client.UploadData(GetRestfulApiUrl("logout"),
+                "POST",
+                data);
+
+            string strResult = Encoding.UTF8.GetString(result);
+            LogoutResponse response = Deserialize<LogoutResponse>(strResult);
+            return response;
+        }
+
+        /// <summary>
+        /// 登录。
+        /// 请参考关于 dp2Library API Login() 的详细说明。
+        /// </summary>
+        /// <param name="strUserName">用户名</param>
+        /// <param name="strPassword">密码</param>
+        /// <param name="strParameters">登录参数。这是一个逗号间隔的列表字符串</param>
+        /// <param name="strError">返回出错信息</param>
+        /// <returns>
+        /// <para>-1:   出错</para>
+        /// <para>0:    登录未成功</para>
+        /// <para>1:    登录成功</para>
+        /// </returns>
+        public LoginResponse Login(string strUserName,
+            string strPassword,
+            string strParameters)
+        {
+            CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+
+            LoginRequest request = new LoginRequest();
+            request.strUserName = strUserName;
+            request.strPassword = strPassword;
+            request.strParameters = strParameters;// "location=#web,type=reader"; 
+            byte[] baData = Encoding.UTF8.GetBytes(Serialize(request));
+
+            byte[] result = client.UploadData(this.GetRestfulApiUrl("login"),
+                "POST",
+                baData);
+
+            string strResult = Encoding.UTF8.GetString(result);
+
+            LoginResponse response = Deserialize<LoginResponse>(strResult);
+            return response;
+        }
+
+
+        /// <summary>
+        /// 清零重新登录次数
+        /// </summary>
+        void ClearRedoCount()
+        {
+            this.m_nRedoCount = 0;
+        }
+        int m_nRedoCount = 0;   // MessageSecurityException以后重试的次数
+
+        /// <summary>
+        /// 处理登录事宜
+        /// </summary>
+        /// <param name="strError">返回出错信息</param>
+        /// <returns>-1: 出错; 1: 登录成功</returns>
+        public int DoNotLogin(ref string strError)
+        {
+            this.ClearRedoCount();
+
+            if (this.BeforeLogin != null)
+            {
+                BeforeLoginEventArgs ea = new BeforeLoginEventArgs();
+                ea.LibraryServerUrl = this.Url;
+                ea.FirstTry = true;
+                ea.ErrorInfo = strError;
+
+            REDOLOGIN:
+                this.BeforeLogin(this, ea);
+
+                if (ea.Cancel == true)
+                {
+                    if (String.IsNullOrEmpty(ea.ErrorInfo) == true)
+                        strError = "用户放弃登录";
+                    else
+                        strError = ea.ErrorInfo;
+                    return -1;
+                }
+
+                if (ea.Failed == true)
+                {
+                    strError = ea.ErrorInfo;
+                    return -1;
+                }
+
+                // 2006/12/30
+                if (this.Url != ea.LibraryServerUrl)
+                {
+                    this.Close();   // 迫使重新构造m_ws 2011/11/22
+                    this.Url = ea.LibraryServerUrl;
+                }
+
+                string strMessage = "";
+                if (ea.FirstTry == true)
+                    strMessage = strError;
+
+                if (_loginCount > 100)
+                {
+                    strError = "重新登录次数太多，超过 100 次，请检查登录 API 是否出现了逻辑问题";
+                    _loginCount = 0;    // 重新开始计算
+                    return -1;
+                }
+                _loginCount++;
+
+                LoginResponse lRet = this.Login(ea.UserName,
+                    ea.Password,
+                    ea.Parameters);
+                if (lRet.LoginResult.Value == -1 || lRet.LoginResult.Value == 0)
+                {
+                    if (String.IsNullOrEmpty(strMessage) == false)
+                        ea.ErrorInfo = strMessage + "\r\n\r\n首次自动登录报错: ";
+                    else
+                        ea.ErrorInfo = "";
+                    ea.ErrorInfo += strError;
+                    ea.FirstTry = false;
+                    ea.LoginFailCondition = LoginFailCondition.PasswordError;
+                    goto REDOLOGIN;
+                }
+
+                /*
+                // this.m_nRedoCount = 0;
+                if (this.AfterLogin != null)
+                {
+                    AfterLoginEventArgs e1 = new AfterLoginEventArgs();
+                    this.AfterLogin(this, e1);
+                    if (string.IsNullOrEmpty(e1.ErrorInfo) == false)
+                    {
+                        strError = e1.ErrorInfo;
+                        return -1;
+                    }
+                }
+                 */
+                return 1;   // 登录成功,可以重做API功能了
+            }
+
+            return -1;
+        }
+
+        #endregion
+
+
+        // 2011/1/21
+        // 预约
+        // parameters:
+        //      strItemBarcodeList  册条码号列表，逗号间隔
+        // 权限：需要有reservation权限
+        public ReservationResponse Reservation(string action,
+            string strReaderBarcode,
+            string strItemBarcodeList)
+        {
+            string strError = "";
+
+        REDO:
+
+            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+
+            ReservationRequest request = new ReservationRequest();
+            request.strFunction = action;
+            request.strReaderBarcode = strReaderBarcode;
+            request.strItemBarcodeList = strItemBarcodeList;
+
+            byte[] baData = Encoding.UTF8.GetBytes(Serialize(request));
+            string strRequest = Encoding.UTF8.GetString(baData);
+            byte[] result = client.UploadData(this.GetRestfulApiUrl("Reservation"),
+                            "POST",
+                             baData);
+
+            string strResult = Encoding.UTF8.GetString(result);
+            ReservationResponse response = Deserialize<ReservationResponse>(strResult);
+            // 未登录时，按需登录
+            if (response.ReservationResult.Value == -1
+                && response.ReservationResult.ErrorCode == ErrorCode.NotLogin)
+            {
+                if (DoNotLogin(ref strError) == 1)
+                    goto REDO;
+
+                // 把按需登录的错误信息包括进去
+                if (string.IsNullOrEmpty(strError) == false)
+                {
+                    response.ReservationResult.ErrorInfo += "\r\n" + strError;
+                }
+            }
+
+            return response;
+        }
+
+
+        public GetBiblioInfoResponse GetBiblioInfo(
+    string strBiblioRecPath,
+    string strBiblioType)
+        {
+        REDO:
+
+            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+
+            GetBiblioInfoRequest request = new GetBiblioInfoRequest();
+            request.strBiblioRecPath = strBiblioRecPath;
+            request.strBiblioType = strBiblioType;
+            request.strBiblioXml = "";
+
+            byte[] baData = Encoding.UTF8.GetBytes(Serialize(request));
+            byte[] result = client.UploadData(this.GetRestfulApiUrl("GetBiblioInfo"),
+                                                "POST",
+                                                baData);
+
+            string strResult = Encoding.UTF8.GetString(result);
+            GetBiblioInfoResponse response = Deserialize<GetBiblioInfoResponse>(strResult);
+
+            // 未登录时，按需登录
+            if (response.GetBiblioInfoResult.Value == -1
+                && response.GetBiblioInfoResult.ErrorCode == ErrorCode.NotLogin)
+            {
+                string strError = "";
+                if (DoNotLogin(ref strError) == 1)
+                    goto REDO;
+
+                // 把按需登录的错误信息包括进去
+                if (string.IsNullOrEmpty(strError) == false)
+                {
+                    response.GetBiblioInfoResult.ErrorInfo += "\r\n" + strError;
+                }
+            }
+
+            return response;
+        }
 
         public long VerifyBarcode(string strLibraryCode,
             string strBarcode,
@@ -132,38 +408,7 @@ namespace DigitalPlatform.LibraryRestClient
 
         }
 
-        // return:
-        //      -1  error
-        //      0   dp2Library的版本号过低。警告信息在strError中
-        //      1   dp2Library版本号符合要求
-        public long GetVersion(out string version,
-            out string strError)
-        {
-            strError = "";
-            version = "";
-            try
-            {
-                CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
 
-                byte[] data = new byte[0];
-                byte[] result = client.UploadData(GetRestfulApiUrl("getversion"),
-                        "POST",
-                        data);
-
-                string strResult = Encoding.UTF8.GetString(result);
-                GetVersionResponse response = Deserialize<GetVersionResponse>(strResult);
-                version = response.GetVersionResult.ErrorInfo;
-                strError = response.GetVersionResult.ErrorInfo;
-
-                return response.GetVersionResult.Value;
-            }
-            catch (Exception ex)
-            {
-                strError = "Exception :" + ex.Message;
-                return -1;
-            }
-        }
 
 
         /// <summary>
@@ -196,7 +441,7 @@ namespace DigitalPlatform.LibraryRestClient
         {
             strError = "";
 
-            REDO:
+        REDO:
 
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-type"] = "application/json; charset=utf-8";
@@ -259,9 +504,13 @@ namespace DigitalPlatform.LibraryRestClient
             out Record[] searchresults,
             out string strError)
         {
+
+            if (string.IsNullOrEmpty(strLang) == true)
+                strLang = "zh";//strLang;
+
             searchresults = null;
             strError = "";
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -282,7 +531,8 @@ namespace DigitalPlatform.LibraryRestClient
                 string strResult = Encoding.UTF8.GetString(result);
                 GetSearchResultResponse response = Deserialize<GetSearchResultResponse>(strResult);
 
-                if (response.GetSearchResultResult.Value == -1 && response.GetSearchResultResult.ErrorCode == ErrorCode.NotLogin)
+                if (response.GetSearchResultResult.Value == -1
+                    && response.GetSearchResultResult.ErrorCode == ErrorCode.NotLogin)
                 {
                     if (DoNotLogin(ref strError) == 1)
                         goto REDO;
@@ -329,7 +579,7 @@ namespace DigitalPlatform.LibraryRestClient
         {
             string strError = "";
 
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -379,7 +629,7 @@ namespace DigitalPlatform.LibraryRestClient
         {
             string strError = "";
 
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -490,7 +740,7 @@ namespace DigitalPlatform.LibraryRestClient
             strSavedXml = "";
             strSavedRecPath = "";
             baNewTimestamp = null;
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -520,7 +770,7 @@ namespace DigitalPlatform.LibraryRestClient
                         return -1;
                     }
                     strError = response.SetReaderInfoResult.ErrorInfo;
-                    this.ErrorCode = response.SetReaderInfoResult.ErrorCode;
+                    //this.ErrorCode = response.SetReaderInfoResult.ErrorCode;
                 }
                 this.ClearRedoCount();
                 return response.SetReaderInfoResult.Value;
@@ -560,7 +810,7 @@ namespace DigitalPlatform.LibraryRestClient
             strOutputReaderBarcode = "";
             strReaderXml = "";
 
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -619,7 +869,7 @@ namespace DigitalPlatform.LibraryRestClient
                 strOutputReaderBarcode = response.strOutputReaderBarcode;
                 borrow_info = response.borrow_info;
                 strError = response.BorrowResult.ErrorInfo;
-                this.ErrorCode = response.BorrowResult.ErrorCode;
+                //this.ErrorCode = response.BorrowResult.ErrorCode;
 
 
                 // 多笔读者记录
@@ -795,20 +1045,20 @@ namespace DigitalPlatform.LibraryRestClient
             return_info = null;
             strError = "";
 
-            /*
-            // 对于还回，不会同时输入证条码与册条码，所以不用检索读者是否有重，可能先判断是否isbn
-            if (strAction == "return")
+        /*
+        // 对于还回，不会同时输入证条码与册条码，所以不用检索读者是否有重，可能先判断是否isbn
+        if (strAction == "return")
+        {
+            string strTemp = strItemBarcode;
+            if (IsbnSplitter.IsISBN(ref strTemp) == true)
             {
-                string strTemp = strItemBarcode;
-                if (IsbnSplitter.IsISBN(ref strTemp) == true)
-                {
-                    strError = strTemp;
-                    return 3;
-                }
+                strError = strTemp;
+                return 3;
             }
-             */
+        }
+         */
 
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -875,7 +1125,7 @@ namespace DigitalPlatform.LibraryRestClient
                 return_info = response.return_info;
                 strError = response.ReturnResult.ErrorInfo;
                 strOutputReaderBarcode = response.strOutputReaderBarcode;
-                this.ErrorCode = response.ReturnResult.ErrorCode;
+                // this.ErrorCode = response.ReturnResult.ErrorCode;
 
                 // 多笔读者记录
                 if (response.ReturnResult.Value == -1 && response.ReturnResult.ErrorCode == ErrorCode.IdcardNumberDup)
@@ -947,7 +1197,7 @@ namespace DigitalPlatform.LibraryRestClient
         {
             strError = "";
             strQueryXml = "";
-            REDO:
+        REDO:
             try
             {
 
@@ -989,7 +1239,7 @@ namespace DigitalPlatform.LibraryRestClient
                 }
                 strQueryXml = response.strQueryXml;
                 strError = response.SearchBiblioResult.ErrorInfo;
-                this.ErrorCode = response.SearchBiblioResult.ErrorCode;
+                // this.ErrorCode = response.SearchBiblioResult.ErrorCode;
                 this.ClearRedoCount();
                 return response.SearchBiblioResult.Value;
             }
@@ -1024,7 +1274,7 @@ namespace DigitalPlatform.LibraryRestClient
         {
             strError = "";
             entities = null;
-            REDO:
+        REDO:
             try
             {
 
@@ -1059,7 +1309,7 @@ namespace DigitalPlatform.LibraryRestClient
                 }
                 entities = response.entityinfos;
                 strError = response.GetEntitiesResult.ErrorInfo;
-                this.ErrorCode = response.GetEntitiesResult.ErrorCode;
+                //this.ErrorCode = response.GetEntitiesResult.ErrorCode;
                 this.ClearRedoCount();
                 return response.GetEntitiesResult.Value;
             }
@@ -1131,7 +1381,7 @@ namespace DigitalPlatform.LibraryRestClient
             strBrowse = "";
             strError = "";
 
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -1187,7 +1437,7 @@ namespace DigitalPlatform.LibraryRestClient
             string strBiblioRecPathExclude)
         {
             string strError = "";
-            REDO:
+        REDO:
 
 
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -1238,7 +1488,7 @@ namespace DigitalPlatform.LibraryRestClient
             out string strError)
         {
             strError = "";
-            REDO:
+        REDO:
             try
             {
                 CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
@@ -1263,7 +1513,7 @@ namespace DigitalPlatform.LibraryRestClient
                     return -1;
                 }
                 strError = response.VerifyReaderPasswordResult.ErrorInfo;
-                this.ErrorCode = response.VerifyReaderPasswordResult.ErrorCode;
+                //this.ErrorCode = response.VerifyReaderPasswordResult.ErrorCode;
                 this.ClearRedoCount();
                 return response.VerifyReaderPasswordResult.Value;
             }
@@ -1277,147 +1527,12 @@ namespace DigitalPlatform.LibraryRestClient
         }
 
 
-#region 登录相关函数
 
-        /// <summary>
-        /// 登录。
-        /// 请参考关于 dp2Library API Login() 的详细说明。
-        /// </summary>
-        /// <param name="strUserName">用户名</param>
-        /// <param name="strPassword">密码</param>
-        /// <param name="strParameters">登录参数。这是一个逗号间隔的列表字符串</param>
-        /// <param name="strError">返回出错信息</param>
-        /// <returns>
-        /// <para>-1:   出错</para>
-        /// <para>0:    登录未成功</para>
-        /// <para>1:    登录成功</para>
-        /// </returns>
-        public LoginResponse Login(string strUserName,
-            string strPassword,
-            string strParameters)
-        {
-            CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-
-            LoginRequest request = new LoginRequest();
-            request.strUserName = strUserName;
-            request.strPassword = strPassword;
-            request.strParameters = strParameters;// "location=#web,type=reader"; 
-            byte[] baData = Encoding.UTF8.GetBytes(Serialize(request));
-
-            byte[] result = client.UploadData(this.GetRestfulApiUrl("login"),
-                "POST",
-                baData);
-
-            string strResult = Encoding.UTF8.GetString(result);
-
-            LoginResponse response = Deserialize<LoginResponse>(strResult);
-            return response;
-        }
-
-
-        /// <summary>
-        /// 清零登录次数
-        /// </summary>
-        void ClearRedoCount()
-        {
-            this.m_nRedoCount = 0;
-        }
-        int m_nRedoCount = 0;   // MessageSecurityException以后重试的次数
-
-        /// <summary>
-        /// 处理登录事宜
-        /// </summary>
-        /// <param name="strError">返回出错信息</param>
-        /// <returns>-1: 出错; 1: 登录成功</returns>
-        public int DoNotLogin(ref string strError)
-        {
-            this.ClearRedoCount();
-
-            if (this.BeforeLogin != null)
-            {
-                BeforeLoginEventArgs ea = new BeforeLoginEventArgs();
-                ea.LibraryServerUrl = this.Url;
-                ea.FirstTry = true;
-                ea.ErrorInfo = strError;
-
-                REDOLOGIN:
-                this.BeforeLogin(this, ea);
-
-                if (ea.Cancel == true)
-                {
-                    if (String.IsNullOrEmpty(ea.ErrorInfo) == true)
-                        strError = "用户放弃登录";
-                    else
-                        strError = ea.ErrorInfo;
-                    return -1;
-                }
-
-                if (ea.Failed == true)
-                {
-                    strError = ea.ErrorInfo;
-                    return -1;
-                }
-
-                // 2006/12/30
-                if (this.Url != ea.LibraryServerUrl)
-                {
-                    this.Close();   // 迫使重新构造m_ws 2011/11/22
-                    this.Url = ea.LibraryServerUrl;
-                }
-
-                string strMessage = "";
-                if (ea.FirstTry == true)
-                    strMessage = strError;
-
-                if (_loginCount > 100)
-                {
-                    strError = "重新登录次数太多，超过 100 次，请检查登录 API 是否出现了逻辑问题";
-                    _loginCount = 0;    // 重新开始计算
-                    return -1;
-                }
-                _loginCount++;
-
-                LoginResponse lRet = this.Login(ea.UserName,
-                    ea.Password,
-                    ea.Parameters);
-                if (lRet.LoginResult.Value == -1 || lRet.LoginResult.Value == 0)
-                {
-                    if (String.IsNullOrEmpty(strMessage) == false)
-                        ea.ErrorInfo = strMessage + "\r\n\r\n首次自动登录报错: ";
-                    else
-                        ea.ErrorInfo = "";
-                    ea.ErrorInfo += strError;
-                    ea.FirstTry = false;
-                    ea.LoginFailCondition = LoginFailCondition.PasswordError;
-                    goto REDOLOGIN;
-                }
-
-                /*
-                // this.m_nRedoCount = 0;
-                if (this.AfterLogin != null)
-                {
-                    AfterLoginEventArgs e1 = new AfterLoginEventArgs();
-                    this.AfterLogin(this, e1);
-                    if (string.IsNullOrEmpty(e1.ErrorInfo) == false)
-                    {
-                        strError = e1.ErrorInfo;
-                        return -1;
-                    }
-                }
-                 */
-                return 1;   // 登录成功,可以重做API功能了
-            }
-
-            return -1;
-        }
-
-#endregion
 
         public GetSystemParameterResponse GetSystemParameter(string strCategory,
             string strName)
         {
-            REDO:
+        REDO:
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-type"] = "application/json; charset=utf-8";
 
@@ -1449,7 +1564,7 @@ namespace DigitalPlatform.LibraryRestClient
             string resultSetName,
             string outputStyle)
         {
-            REDO:
+        REDO:
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-type"] = "application/json; charset=utf-8";
 
@@ -1487,7 +1602,7 @@ namespace DigitalPlatform.LibraryRestClient
             string strStyle,
             byte[] baInputTimestamp)
         {
-            REDO:
+        REDO:
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-type"] = "application/json; charset=utf-8";
 
@@ -1615,7 +1730,7 @@ namespace DigitalPlatform.LibraryRestClient
             int nLength,
             string strStyle)
         {
-            REDO:
+        REDO:
             CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-type"] = "application/json; charset=utf-8";
 
@@ -1677,7 +1792,7 @@ namespace DigitalPlatform.LibraryRestClient
 
             byte[] baTotal = null;
 
-            while(true)
+            while (true)
             {
                 DoIdle();
 
@@ -1722,8 +1837,10 @@ namespace DigitalPlatform.LibraryRestClient
             return 0;
         }
 
-        public void Close()
+        public void Close1()
         {
+
+
             /*
             this.m_lock.AcquireWriterLock(m_nLockTimeout);
             try
@@ -1773,7 +1890,7 @@ namespace DigitalPlatform.LibraryRestClient
              */
         }
 
-#region 公共函数
+        #region 公共函数
 
         void DoIdle()
         {
@@ -1836,7 +1953,7 @@ namespace DigitalPlatform.LibraryRestClient
             // System.TimeoutException
             if (ex0 is System.TimeoutException)
             {
-                this.ErrorCode = ErrorCode.RequestTimeOut;
+                //this.ErrorCode = ErrorCode.RequestTimeOut;
                 //this.AbortIt();
                 strError = GetExceptionMessage(ex0);
                 return 0;
@@ -1901,7 +2018,7 @@ namespace DigitalPlatform.LibraryRestClient
             }
 #endif
 
-            this.ErrorCode = ErrorCode.RequestError;	// 一般错误
+            //this.ErrorCode = ErrorCode.RequestError;	// 一般错误
             /*
             if (this.m_ws != null)
             {
@@ -1913,9 +2030,9 @@ namespace DigitalPlatform.LibraryRestClient
             return 0;
         }
 
-#endregion
+        #endregion
 
-#region 2个json序列化为类的方法
+        #region 2个json序列化为类的方法
 
         public static T Deserialize<T>(string json)
         {
@@ -1938,7 +2055,7 @@ namespace DigitalPlatform.LibraryRestClient
             }
         }
 
-#endregion
+        #endregion
 
 
     }
@@ -1971,7 +2088,7 @@ namespace DigitalPlatform.LibraryRestClient
     BeforeLoginEventArgs e);
 
     /// <summary>
-    /// 登陆前时间的参数
+    /// 登录前时间的参数
     /// </summary>
     public class BeforeLoginEventArgs : EventArgs
     {
