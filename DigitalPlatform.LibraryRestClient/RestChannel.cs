@@ -65,18 +65,17 @@ namespace DigitalPlatform.LibraryRestClient
         }
 
 
-
-
-
         // return:
         //      -1  error
         //      0   dp2Library的版本号过低。警告信息在strError中
         //      1   dp2Library版本号符合要求
         public GetVersionResponse GetVersion()
         {
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             byte[] data = new byte[0];
             byte[] result = client.UploadData(GetRestfulApiUrl("getversion"),
@@ -96,9 +95,10 @@ namespace DigitalPlatform.LibraryRestClient
         /// <returns></returns>
         public LogoutResponse Logout()
         {
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
 
             byte[] data = new byte[0];
             byte[] result = client.UploadData(GetRestfulApiUrl("logout"),
@@ -127,9 +127,11 @@ namespace DigitalPlatform.LibraryRestClient
             string strPassword,
             string strParameters)
         {
-            CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             LoginRequest request = new LoginRequest();
             request.strUserName = strUserName;
@@ -260,9 +262,11 @@ namespace DigitalPlatform.LibraryRestClient
 
         REDO:
 
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             ReservationRequest request = new ReservationRequest();
             request.strFunction = action;
@@ -301,9 +305,11 @@ namespace DigitalPlatform.LibraryRestClient
         {
         REDO:
 
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             GetBiblioInfoRequest request = new GetBiblioInfoRequest();
             request.strBiblioRecPath = strBiblioRecPath;
@@ -344,9 +350,11 @@ namespace DigitalPlatform.LibraryRestClient
             long nRet = 0;
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 VerifyBarcodeRequest request = new VerifyBarcodeRequest();
                 request.strLibraryCode = strLibraryCode;
@@ -376,9 +384,11 @@ namespace DigitalPlatform.LibraryRestClient
         {
             strDbXml = "";
             strError = "";
-            CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             /*
         // 管理数据库
@@ -450,9 +460,11 @@ namespace DigitalPlatform.LibraryRestClient
 
         REDO:
 
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             // 请求实体
             SearchReaderRequest request = new SearchReaderRequest();
@@ -521,9 +533,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 GetSearchResultRequest request = new GetSearchResultRequest();
                 request.strResultSetName = strResultSetName;
@@ -591,9 +605,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 GetReaderInfoRequest request = new GetReaderInfoRequest();
                 request.strBarcode = strBarcode;
@@ -642,9 +658,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 GetItemInfoRequest request = new GetItemInfoRequest()
                 {
@@ -754,9 +772,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 SetReaderInfoRequest request = new SetReaderInfoRequest();
                 request.strAction = strAction;
@@ -825,9 +845,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
 
                 /// <param name="bRenew">是否为续借。true 表示xujie；false 表示普通借阅</param>
@@ -945,9 +967,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
 
                 /// <param name="bRenew">是否为续借。true 表示xujie；false 表示普通借阅</param>
@@ -1075,9 +1099,10 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
 
 
                 // 还书
@@ -1216,9 +1241,10 @@ namespace DigitalPlatform.LibraryRestClient
             try
             {
 
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
 
                 SearchBiblioRequest request = new SearchBiblioRequest();
                 request.strBiblioDbNames = strBiblioDbNames;
@@ -1294,9 +1320,11 @@ namespace DigitalPlatform.LibraryRestClient
             try
             {
 
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 GetEntitiesRequest request = new GetEntitiesRequest();
                 request.strBiblioRecPath = strBiblioRecPath;
@@ -1401,9 +1429,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 GetBrowseRecordsRequest request = new GetBrowseRecordsRequest();
                 request.paths = new string[] { strRecPath };
@@ -1458,9 +1488,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
 
 
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             GetBiblioSummaryRequest request = new GetBiblioSummaryRequest();
             request.strItemBarcode = strItemBarcode; // 册条码号
@@ -1510,9 +1542,11 @@ namespace DigitalPlatform.LibraryRestClient
         REDO:
             try
             {
-                CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-                client.Headers["Content-type"] = "application/json; charset=utf-8";
-                client.Headers["User-Agent"] = "dp2LibraryClient";
+                //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+                //client.Headers["Content-type"] = "application/json; charset=utf-8";
+                //client.Headers["User-Agent"] = "dp2LibraryClient";
+                CookieAwareWebClient client = this.GetClient();
+
 
                 VerifyReaderPasswordRequest request = new VerifyReaderPasswordRequest();
                 request.strReaderBarcode = strReaderBarcode;
@@ -1553,9 +1587,11 @@ namespace DigitalPlatform.LibraryRestClient
             string strName)
         {
         REDO:
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             GetSystemParameterRequest request = new GetSystemParameterRequest()
             {
@@ -1586,9 +1622,11 @@ namespace DigitalPlatform.LibraryRestClient
             string outputStyle)
         {
         REDO:
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             SearchRequest request = new SearchRequest()
             {
@@ -1625,9 +1663,11 @@ namespace DigitalPlatform.LibraryRestClient
             byte[] baInputTimestamp)
         {
         REDO:
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             WriteResRequest request = new WriteResRequest()
             {
@@ -1747,6 +1787,7 @@ namespace DigitalPlatform.LibraryRestClient
         }
 
 
+
         public GetResResponse GetRes(
             string strResPath,
             long lStart,
@@ -1754,9 +1795,11 @@ namespace DigitalPlatform.LibraryRestClient
             string strStyle)
         {
         REDO:
-            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
-            client.Headers["Content-type"] = "application/json; charset=utf-8";
-            client.Headers["User-Agent"] = "dp2LibraryClient";
+            //CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            //client.Headers["Content-type"] = "application/json; charset=utf-8";
+            //client.Headers["User-Agent"] = "dp2LibraryClient";
+            CookieAwareWebClient client = this.GetClient();
+
 
             GetResRequest request = new GetResRequest()
             {
@@ -1863,8 +1906,6 @@ namespace DigitalPlatform.LibraryRestClient
 
         public void Close1()
         {
-
-
             /*
             this.m_lock.AcquireWriterLock(m_nLockTimeout);
             try
@@ -1915,6 +1956,18 @@ namespace DigitalPlatform.LibraryRestClient
         }
 
         #region 公共函数
+
+        /// <summary>
+        /// 设置http头信息
+        /// </summary>
+        /// <param name="client"></param>
+        public CookieAwareWebClient GetClient()
+        {
+            CookieAwareWebClient client = new CookieAwareWebClient(this.Cookies);
+            client.Headers["Content-type"] = "application/json; charset=utf-8";
+            client.Headers["User-Agent"] = "dp2LibraryClient";
+            return client;
+        }
 
         void DoIdle()
         {
