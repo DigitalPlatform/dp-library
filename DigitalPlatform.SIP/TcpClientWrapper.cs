@@ -53,6 +53,18 @@ namespace DigitalPlatform.SIP2
             // this.MessageTerminator = (char)13;
         }
 
+        // 2020/7/27
+        public bool Connected
+        {
+            get
+            {
+                if (this._client == null)
+                    return false;
+
+                return this._client.Connected;
+            }
+        }
+
         public bool Connection(string serverUrl, int port, out string error)
         {
             error = "";
@@ -303,7 +315,7 @@ namespace DigitalPlatform.SIP2
             recvMsg = this.Encoding.GetString(baPackage);
             return 0;
 
-            ERROR1:
+        ERROR1:
             LibraryManager.Log?.Error(error);
             baPackage = null;
             return -1;
