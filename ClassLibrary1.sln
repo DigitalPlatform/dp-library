@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalPlatform.LibraryRest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalPlatform.ServiceProcess", "DigitalPlatform.ServiceProcess\DigitalPlatform.ServiceProcess.csproj", "{F6A351AC-D11E-4A48-8970-632A15F5DB60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestSIP", "UnitTestSIP\UnitTestSIP.csproj", "{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F6A351AC-D11E-4A48-8970-632A15F5DB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6A351AC-D11E-4A48-8970-632A15F5DB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6A351AC-D11E-4A48-8970-632A15F5DB60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

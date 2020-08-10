@@ -1,11 +1,11 @@
-﻿using DigitalPlatform.SIP2.Request;
-using DigitalPlatform.SIP2.Response;
-using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+
+using DigitalPlatform.SIP2.Request;
+using DigitalPlatform.SIP2.Response;
 
 //[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace DigitalPlatform.SIP2
