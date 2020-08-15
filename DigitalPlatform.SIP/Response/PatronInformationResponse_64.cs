@@ -61,21 +61,21 @@ namespace DigitalPlatform.SIP2.Response
 
              //<hold items><overdue items><charged items><fine items><recall items><unavailable hold items>
              //AS	AT	AU	AV	BU	CD
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AS_HoldItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AT_OverdueItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AU_ChargedItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AV_FineItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BU_RecallItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CD_UnavailableHoldItems, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AS_HoldItems, false,true ));//重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AT_OverdueItems, false, true));//重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AU_ChargedItems, false, true));//重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AV_FineItems, false, true));//重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BU_RecallItems, false, true));//重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CD_UnavailableHoldItems, false, true));//重复字段
 
 
-             //<home address><e-mail address><home phone number><screen message><print line>
-             //BD	BE  BF	AF	AG
+            //<home address><e-mail address><home phone number><screen message><print line>
+            //BD	BE  BF	AF	AG
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BD_HomeAddress, false ));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BE_EmailAddress, false ));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BF_HomePhoneNumbers, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false, true)); //重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ,true));//重复字段
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
@@ -490,6 +490,8 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
 
+        // 2020/8/14 AF,AG是可重复字段，该成员统一放在BaseMessage里
+        /*
         //variable-length optional field
         public string AF_ScreenMessage_o
         {
@@ -515,6 +517,7 @@ namespace DigitalPlatform.SIP2.Response
                 this.SetVariableFieldValue(SIPConst.F_AG_PrintLine, value);
             }
         }
-         
+        */
+
     }
 }

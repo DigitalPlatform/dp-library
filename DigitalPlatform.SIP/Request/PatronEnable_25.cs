@@ -27,8 +27,8 @@ namespace DigitalPlatform.SIP2.Request
             //AO	AA	AC	AD
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AO_InstitutionId, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AA_PatronIdentifier, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AC_TerminalPassword, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AD_PatronPassword, true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AC_TerminalPassword, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AD_PatronPassword, false));
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));

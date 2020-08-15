@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace DigitalPlatform.SIP2
@@ -69,12 +70,17 @@ namespace DigitalPlatform.SIP2
         // 获取某个定长字段
         protected VariableLengthField GetVariableField(string id)
         {
+            VariableLengthField temp = null;
             foreach (VariableLengthField field in this.VariableLengthFields)
             {
                 if (field.ID == id)
-                    return field;
+                {
+                    //return field; 
+                    temp = field;//2020/8/13 改造，找到最后一个同名字段再返回。
+                }
             }
-            return null;
+
+            return temp;
         }
 
         protected string GetVariableFieldValue(string id)
@@ -107,7 +113,26 @@ namespace DigitalPlatform.SIP2
                 throw new Exception("未定义变长字段" + id);
             }
 
-            field.Value = value;
+            // 2020/8/13 如果是重复的字段，先检查字段是否已经赋值，没赋值过则赋值，
+            // 如果已有值，则新new的一个字段,插在其后（这样可以保证原始的字段顺序）
+            if (field.IsRepeat == false)
+            {
+                field.Value = value;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(field.Value) == true)
+                    field.Value = value;
+                else
+                {
+                    VariableLengthField f = new VariableLengthField(id, field.IsRepeat, field.IsRepeat);
+                    f.Value = value;
+
+                    // 插在其后,不要用增加（这样可以保证原始的字段顺序）
+                    this.VariableLengthFields.Insert(this.VariableLengthFields.IndexOf(field) + 1, f);
+                    //this.VariableLengthFields.Add(f);
+                }
+            }
         }
 
         protected List<VariableLengthField> GetVariableFieldList(string id)
@@ -148,6 +173,63 @@ namespace DigitalPlatform.SIP2
                 this.VariableLengthFields.Add(field);
             }
 
+        }
+
+        #endregion
+
+        #region 各命令通用字段
+
+        public List<VariableLengthField> AF_ScreenMessage_List
+        {
+            get
+            {
+                return this.GetVariableFieldList(SIPConst.F_AF_ScreenMessage);
+            }
+        }
+
+        //variable-length optional field
+        public string AF_ScreenMessage_o
+        {
+            get
+            {
+                // 2020/8/14，因为AF是重复字段，所以把所有值用逗号组合起来，如果前端想自己拼装，请调AF_ScreenMessage_List
+                List<VariableLengthField> list= this.GetVariableFieldList(SIPConst.F_AF_ScreenMessage);
+                string text = "";
+                foreach (VariableLengthField one in list)
+                {
+                    if (text != "")
+                        text += ",";
+                    text += one.Value;
+                }
+                return text;
+            }
+        }
+
+        // AG是重复字段
+        public List<VariableLengthField> AG_PrintLine
+        {
+            get
+            {
+                return this.GetVariableFieldList(SIPConst.F_AG_PrintLine);
+            }
+        }
+
+        //variable-length optional field
+        public string AG_PrintLine_o
+        {
+            get
+            {
+                // 2020/8/14，因为AG是重复字段，所以把所有值用逗号组合起来，如果前端想自己拼装，请调 AG_PrintLine
+                List<VariableLengthField> list = this.GetVariableFieldList(SIPConst.F_AG_PrintLine);
+                string text = "";
+                foreach (VariableLengthField one in list)
+                {
+                    if (text != "")
+                        text += ",";
+                    text += one.Value;
+                }
+                return text;
+            }
         }
 
         #endregion
@@ -220,7 +302,17 @@ namespace DigitalPlatform.SIP2
                 }
             }
 
-            return text.ToString();
+
+            string result=  text.ToString();
+
+            // 去掉字符串最后一个|
+            if (string.IsNullOrEmpty(result) == false)
+            {
+                if (result.Substring(result.Length - 1) == SIPConst.FIELD_TERMINATOR)
+                    result=result.Substring(0, result.Length - 1);
+            }
+
+            return result;
         }
 
         // 校验对象的各参数是否合法

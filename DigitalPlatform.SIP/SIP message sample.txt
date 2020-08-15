@@ -1,0 +1,81 @@
+Login, Message 93 
+9300CNLoginUserID|COLoginPassword|CPLocationCode|AY5AZEC78<CR> 
+
+Login Response, Message 94 
+941AY3AZFDFA<CR> 
+
+==
+SC Status, Message 99 
+9900401.00AY1AZFCA5
+
+ACS Status, Message 98 
+98YYYNYN01000319960214    1447001.00AOID_21|AMCentral Library|ANtty30|AFScreen Message|AGPrint Message|AY1AZDA74
+
+==
+Request ACS Resend, Message 97 
+97
+
+Request SC Resend, Message 96 
+96<CR> 
+
+==
+Patron Status Request, Message 23 
+2300119960212    100239AOid_21|104000000105|AC|AD|AY2AZF400
+
+Patron Status Response, Message 24 
+24              00119960212    100239AO|AA104000000105|AEJohn Doe|AFScreen Message|AGCheck Print message|AY2AZDFC4
+
+==
+Patron Information Message, Message 63 
+6300119980723    091905Y         AOInstitutionID|AAPatronID|BP00001| BQ00005|AY1AZEA83
+
+Patron Information Response, Message 64 
+64              00119980723    104009000100000002000100020000AOInstitutionID for PatronID|AAPatronID|AEPatron Name|BZ0002|CA0003|CB0010|BLY|ASItemID1 for PatronID |AUChargeItem1|AUChargeItem2|BDHome Address|BEE Mail Address|BFHome Phone for PatronID|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1|AFScreen Message 2 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AGPrint Line 1 for PatronID, Language 1|AGPrint Line 2 for PatronID, language 1|AY4AZ608F 
+
+==
+Block Patron, Message 01 
+01N19960213    162352AO|ALCARD BLOCK TEST| AA104000000705|AC|AY2AZF02F<CR> 
+
+==
+Patron Enable, Message 25 
+2519980723    094240AOCertification Institute ID|AAPatronID|AY4AZEBF1<CR> 
+
+Patron Enable Response, Message 26
+26              00119980723    111413AOInstitutionID for PatronID|AAPatronID|AEPatron Name|BLY|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1 |AGPrint Line 0 for PatronID, Language 1|AY7AZ8EA6 
+
+==
+Item Information, Message 17
+1719980723    100000AOCertification Institute ID|ABItemBook|AY1AZEBEB 
+
+Item Information Response, Message 18 
+1808000119980723    115615CF00000|ABItemBook|AJTitle For Item Book|CK003|AQPermanent location|APCurrent Location|CHFree-form text|AY0AZC05B
+
+
+===
+Checkout, Message 11 
+11YN19960212   10051419960212   100514AO|AA104000000105| AB000000000005792|AC|AY3AZEDB7<CR> 
+
+Checkout Response，Message 12
+121NNY20170630    141540AOdp2Library|AAL905071|AB549096|AJ川味家常菜|AH2017-10-28|AF图书【川味家常菜】借阅成功！应还日期：2017-10-28|AG读者【L905071】借书 川味家常菜【川味家常菜】成功，应还日期：2017-10-28|AY4AZF331
+
+==
+
+Checkin, Message 09 
+09N19980821    085721                  APCertification Terminal Location|AOCertification Institute ID|ABCheckInBook|ACTPWord|BIN|AY2AZD6A5 
+
+Checkin Response,Message 10
+101YNN20170630    141632AOdp2Library|AB510102|AQ综合图书库|AJ《奔放西班牙餐》|AAL905071|CK001|CHProperties|CLsort bin A1|AF图书《奔放西班牙餐》还回处理成功！2017-06-30|AG图书《奔放西班牙餐》-- 510102已于2017-06-30归还！|AY4AZ4E37
+
+==
+Fee Paid Message, Message 37 
+3719980723    0932110401USD BV111.11|AOCertification Institute ID|AAPatronID|BKTransactionID|AY2AZE1EF<CR> 
+
+Fee Paid Response,Message 38
+38Y19980723    111035AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AY6AZ9716 
+
+==
+End Patron Session, Message 35 
+3519980723    094014AOCertification Institute ID|AAPatronID|AY3AZEBF2<CR> 
+
+End Session Response, Message 36
+36Y19980723    110658AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1|AFScreen Message 2 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AGPrint Line 1 for PatronID, Language 1|AGPrint Line 2 for PatronID, language 1|AY5AZ970F 

@@ -22,7 +22,7 @@ namespace DigitalPlatform.SIP2.Response
             //14-char	3-char	18-char
             this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_PatronStatus, 14));
             this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_Language,3));
-            this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_TransactionDate, 1));
+            this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_TransactionDate, 18));
 
             //==后面变长字段
             //<institution id><patron identifier><personal name><valid patron><valid patron password><screen message><print line>
@@ -33,11 +33,15 @@ namespace DigitalPlatform.SIP2.Response
 
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BL_ValidPatron, false ));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CQ_ValidPatronPassword, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false,true));
+
+            // 校验码
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
+
         }
 
-        
+
         //14-char, fixed-length required field
         public string PatronStatus_14
         {

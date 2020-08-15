@@ -247,6 +247,9 @@ namespace DigitalPlatform.SIP2
         //消息结束符
         public const string MESSAGE_TERMINATOR = "\n";
 
+        
+
+
         //public const char Terminator = (char)13;
         // language
         public const string LANGUAGE_UNKNOWN = "000";
