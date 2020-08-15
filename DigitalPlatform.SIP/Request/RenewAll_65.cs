@@ -20,16 +20,16 @@ namespace DigitalPlatform.SIP2.Request
             //==前面的定长字段
             //<transaction date>
             //18-char
-            this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_TransactionDate, 1));
+            this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_TransactionDate, 18));
 
             //==后面变长字段
             //<institution id><patron identifier><patron password><terminal password><fee acknowledged>
             //	AO	AA	AD	AC	BO
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AO_InstitutionId, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AA_PatronIdentifier, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AD_PatronPassword, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AC_TerminalPassword, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BO_FeeAcknowledged, true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AD_PatronPassword,false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AC_TerminalPassword, false)) ;
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BO_FeeAcknowledged, false)) ;
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));

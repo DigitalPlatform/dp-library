@@ -155,6 +155,8 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
 
+        // 2020/8/14 AF,AG是可重复字段，该成员统一放在BaseMessage里
+        /*
         //variable-length optional field
         public string AF_ScreenMessage_o
         {
@@ -180,6 +182,6 @@ namespace DigitalPlatform.SIP2.Response
                 this.SetVariableFieldValue(SIPConst.F_AG_PrintLine, value);
             }
         }
-         
+         */
     }
 }

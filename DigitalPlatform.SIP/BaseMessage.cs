@@ -287,18 +287,28 @@ namespace DigitalPlatform.SIP2
             Debug.Assert(String.IsNullOrEmpty(this.CommandIdentifier) == false, "命令指示符未赋值");
             StringBuilder text = new StringBuilder(this.CommandIdentifier);
 
-            foreach (FixedLengthField field in this.FixedLengthFields)
+            if (this.FixedLengthFields != null)
             {
-                if (field.Value == null || field.Value.Length != field.Length)
-                    throw new Exception("定长字段[" + field.Name + "]的值为null或者长度不符合定义");
-                text.Append(field.Value);
+                //foreach (FixedLengthField field in this.FixedLengthFields)
+                for (int i = 0; i < this.FixedLengthFields.Count; i++)
+                {
+                    FixedLengthField field = this.FixedLengthFields[i];
+                    if (field.Value == null || field.Value.Length != field.Length)
+                        throw new Exception("定长字段[" + field.Name + "]的值为null或者长度不符合定义");
+                    text.Append(field.Value);
+                }
             }
 
-            foreach (VariableLengthField field in this.VariableLengthFields)
+            if (this.VariableLengthFields != null && this.VariableLengthFields.Count > 0)
             {
-                if (field.Value != null)
+                //foreach (VariableLengthField field in this.VariableLengthFields)
+                for (int i = 0; i < this.VariableLengthFields.Count; i++)
                 {
-                    text.Append(field.ID + field.Value + SIPConst.FIELD_TERMINATOR);
+                    VariableLengthField field = this.VariableLengthFields[i];
+                    if (field.Value != null)
+                    {
+                        text.Append(field.ID + field.Value + SIPConst.FIELD_TERMINATOR);
+                    }
                 }
             }
 

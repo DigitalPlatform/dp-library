@@ -412,7 +412,7 @@ namespace UnitTestSIP
         [TestMethod]
         public void Test_11()
         {
-            string text = "11YN19960212   10051419960212   100514AO|AA104000000105|AB000000000005792|AC|AY3AZEDB7";
+            string text = "11YN19960212    10051419960212    100514AO|AA104000000105|AB000000000005792|AC|AY3AZEDB7";
             // return:
             //      -1  出错
             //      0   成功
@@ -447,6 +447,337 @@ namespace UnitTestSIP
             string retText = request.ToText();
             Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
         }
+        #endregion
+
+        #region Checkin, Message 09,10
+
+        //Checkin, Message 09 
+        [TestMethod]
+        public void Test_09()
+        {
+            string text = "09N19980821    085721                  APCertification Terminal Location|AOCertification Institute ID|ABCheckInBook|ACTPWord|BIN|AY2AZD6A5";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as Checkin_09;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Checkin Response,Message 10
+        [TestMethod]
+        public void Test_10_1()
+        {
+            string text = "101YNN20170630    141632AOdp2Library|AB510102|AQ综合图书库|AJ《奔放西班牙餐》|AAL905071|CK001|CHProperties|CLsort bin A1|AF图书《奔放西班牙餐》还回处理成功！2017-06-30|AG图书《奔放西班牙餐》-- 510102已于2017-06-30归还！|AY4AZ4E37";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as CheckinResponse_10;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            // 2020/8/16注意这个例子把CL排在了AA了后面，但SIP2.0中，CL字段是在AA之前的
+            // 所以这个例子输出的字符串与原始字符串中字段位置有差别，但也是正确的，所以改为判断字符串长度是否
+            string retText = request.ToText();
+            Assert.AreEqual(text.Length, retText.Length); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        [TestMethod]
+        public void Test_10_2()
+        {
+            string text = "101YNN20170630    141632AOdp2Library|AB510102|AQ综合图书库|AJ《奔放西班牙餐》|CLsort bin A1|AAL905071|CK001|CHProperties|AF图书《奔放西班牙餐》还回处理成功！2017-06-30|AG图书《奔放西班牙餐》-- 510102已于2017-06-30归还！|AY4AZ4E37";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as CheckinResponse_10;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+        #endregion
+
+        #region Fee Paid Message 37,38
+
+        //Fee Paid Message 37 
+        [TestMethod]
+        public void Test_37()
+        {
+            string text = "3719980723    0932110401USDBV111.11|AOCertification Institute ID|AAPatronID|BKTransactionID|AY2AZE1EF";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as FeePaid_37;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Fee Paid Response,Message 38
+        [TestMethod]
+        public void Test_38()
+        {
+            string text = "38Y19980723    111035AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AY6AZ9716";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as FeePaidResponse_38;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+        #endregion
+
+        #region End Patron Session, Message 35,36
+
+        //End Patron Session, Message 35 
+        [TestMethod]
+        public void Test_35()
+        {
+            string text = "3519980723    094014AOCertification Institute ID|AAPatronID|AY3AZEBF2";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as EndPatronSession_35;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //End Session Response, Message 36
+        [TestMethod]
+        public void Test_36()
+        {
+            string text = "36Y19980723    110658AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1|AFScreen Message 2 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AGPrint Line 1 for PatronID, Language 1|AGPrint Line 2 for PatronID, language 1|AY5AZ970F";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as EndSessionResponse_36;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+        #endregion
+
+        #region Block Patron, Message 01 
+
+        //Checkout, Message 11 
+        [TestMethod]
+        public void Test_01()
+        {
+            string text = "01N19960213    162352AO|ALCARD BLOCK TEST|AA104000000705|AC|AY2AZF02F";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as BlockPatron_01;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        #endregion
+
+        #region Renew 29,30
+
+        //Renew 29
+        [TestMethod]
+        public void Test_29()
+        {
+            string text = "29NN20170630    144419                  AOdp2Library|AAL905071|AB510105|BON";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as Renew_29;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Renew Response 30
+        [TestMethod]
+        public void Test_30_1()
+        {
+            string text = "300YNN20170630    144410AOdp2Library|AA|AB510105|AJ|AH|AF图书【510105】续借失败！|AG读者【】续借图书【510105】失败！续借操作被拒绝。不具备 renew 权限。 在 zh-CN 中没有找到对应的资源。|AY4AZ3CAD";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as RenewResponse_30;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Renew Response 30
+        [TestMethod]
+        public void Test_30_2()
+        {
+            string text = "301YNN20170630    154932AOdp2Library|AAL905071|AB510104|AJ奔放西班牙餐|AH2017-08-29|AF图书【奔放西班牙餐】续借处理成功，应还日期：2017-08-29|AG读者【L905071】续借处理成功，应还日期：2017-08-29|AY4AZD173";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as RenewResponse_30;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+
+        #endregion
+
+        #region Renew All 65,66
+
+        //Renew All 65
+        [TestMethod]
+        public void Test_65()
+        {
+            //65	18-char	AO	AA	AD	AC	BO
+            string text = "6520170630    144419AOdp2Library|AAL905071|AD|AC|BON";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as RenewAll_65;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Renew All Response 66
+        [TestMethod]
+        public void Test_66()
+        {
+            //66	1-char	4-char	4-char	18-char	AO	BM	BN	AF	AG
+            string text = "6601234123420170630    144410AOdp2Library|BM001|BN002|BN003|AF001中国|AF002美国|AF003德国|AGtest|AY4AZ3CAD";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as RenewAllResponse_66;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        #endregion
+
+        #region Hold 15,16
+
+        //Hold 15
+        [TestMethod]
+        public void Test_15()
+        {
+            //15 1-char 18-char BW BS BY AO AA AD AB AJ AC BO
+            string text = "15+20170630    144419BW20170630    144419|BS|BY|AOdp2Library|AAL905071|AD|AB|AJ|AC|BON";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as Hold_15;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        //Hold Response 16
+        [TestMethod]
+        public void Test_16()
+        {
+            //16  1-char  1-char  18-char  BW  BR  BS  AO  AA  AB AJ  AF  AG
+            string text = "160120170630    144410BW20170630    144410|BR|BS|AOdp2Library|AA001|AB|AJ001中国|AF002美国|AF003德国|AGtest|AY4AZ3CAD";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as HoldResponse_16;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
         #endregion
     }
 }

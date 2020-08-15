@@ -32,9 +32,7 @@ Patron Information Message, Message 63
 Patron Information Response, Message 64 
 64              00119980723    104009000100000002000100020000AOInstitutionID for PatronID|AAPatronID|AEPatron Name|BZ0002|CA0003|CB0010|BLY|ASItemID1 for PatronID |AUChargeItem1|AUChargeItem2|BDHome Address|BEE Mail Address|BFHome Phone for PatronID|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1|AFScreen Message 2 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AGPrint Line 1 for PatronID, Language 1|AGPrint Line 2 for PatronID, language 1|AY4AZ608F 
 
-==
-Block Patron, Message 01 
-01N19960213    162352AO|ALCARD BLOCK TEST| AA104000000705|AC|AY2AZF02F<CR> 
+
 
 ==
 Patron Enable, Message 25 
@@ -53,7 +51,7 @@ Item Information Response, Message 18
 
 ===
 Checkout, Message 11 
-11YN19960212   10051419960212   100514AO|AA104000000105| AB000000000005792|AC|AY3AZEDB7<CR> 
+11YN19960212    10051419960212    100514AO|AA104000000105| AB000000000005792|AC|AY3AZEDB7<CR> 
 
 Checkout Response，Message 12
 121NNY20170630    141540AOdp2Library|AAL905071|AB549096|AJ川味家常菜|AH2017-10-28|AF图书【川味家常菜】借阅成功！应还日期：2017-10-28|AG读者【L905071】借书 川味家常菜【川味家常菜】成功，应还日期：2017-10-28|AY4AZF331
@@ -68,7 +66,7 @@ Checkin Response,Message 10
 
 ==
 Fee Paid Message, Message 37 
-3719980723    0932110401USD BV111.11|AOCertification Institute ID|AAPatronID|BKTransactionID|AY2AZE1EF<CR> 
+3719980723    0932110401USDBV111.11|AOCertification Institute ID|AAPatronID|BKTransactionID|AY2AZE1EF<CR> 
 
 Fee Paid Response,Message 38
 38Y19980723    111035AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AY6AZ9716 
@@ -79,3 +77,7 @@ End Patron Session, Message 35
 
 End Session Response, Message 36
 36Y19980723    110658AOInstitutionID for PatronID|AAPatronID|AFScreenMessage 0 for PatronID, Language 1|AFScreen Message 1 for PatronID, Language 1|AFScreen Message 2 for PatronID, Language 1|AGPrint Line 0 for PatronID, Language 1|AGPrint Line 1 for PatronID, Language 1|AGPrint Line 2 for PatronID, language 1|AY5AZ970F 
+
+==
+Block Patron, Message 01 
+01N19960213    162352AO|ALCARD BLOCK TEST| AA104000000705|AC|AY2AZF02F<CR> 

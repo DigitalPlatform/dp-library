@@ -165,6 +165,21 @@ namespace DigitalPlatform.SIP2
                         message = new PatronEnableResponse_26();
                         break;
                     }
+                case "01":
+                    {
+                        message = new BlockPatron_01();
+                        break;
+                    }
+                case "15":
+                    {
+                        message = new Hold_15();
+                        break;
+                    }
+                case "16":
+                    {
+                        message = new HoldResponse_16();
+                        break;
+                    }
                 default:
                     error = "不支持的命令'" + cmdIdentifiers + "'";
                     return -1;

@@ -29,12 +29,16 @@ namespace DigitalPlatform.SIP2.Response
             //<institution id><renewed items><unrenewed items><screen message><print line>
             //AO	BM	BN	AF	AG
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AO_InstitutionId, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BM_RenewedItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BN_UnrenewedItems, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BM_RenewedItems, false,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BN_UnrenewedItems, false,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false,true));
+
+            // 校验码相关
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
+
         }
-      
+
         //1-char, fixed-length required field:  0 or 1
         public string Ok_1
         {
@@ -138,6 +142,7 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
 
+        /*
         //variable-length optional field
         public string AF_ScreenMessage_o
         {
@@ -164,5 +169,6 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
          
+        */
     }
 }

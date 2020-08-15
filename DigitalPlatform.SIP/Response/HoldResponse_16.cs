@@ -35,8 +35,8 @@ namespace DigitalPlatform.SIP2.Response
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AA_PatronIdentifier, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AB_ItemIdentifier, false ));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AJ_TitleIdentifier, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false,true ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false,true ));
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
@@ -186,6 +186,7 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
 
+        /*
         //variable-length optional field
         public string AF_ScreenMessage_o
         {
@@ -211,6 +212,7 @@ namespace DigitalPlatform.SIP2.Response
                 this.SetVariableFieldValue(SIPConst.F_AG_PrintLine, value);
             }
         }
+        */
         
     }
 }
