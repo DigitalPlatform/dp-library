@@ -779,5 +779,51 @@ namespace UnitTestSIP
         }
 
         #endregion
+
+        #region Item Status Update 19,20
+
+        // Item Status Update 19
+        [TestMethod]
+        public void Test_19()
+        {
+            //19	18-char	AO	AB	AC	CH
+            string text = "1920170630    144419AOdp2Library|AB905071|CH";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as ItemStatusUpdate_19;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        // Item Status Update Response 20
+        [TestMethod]
+        public void Test_20()
+        {
+            //20	1-char	18-char	AB	AJ	CH	AF	AG
+            string text = "20020170630    144410AB001|AJ001中国|CH|AF002美国|AGtest|AY4AZ3CAD";
+            // return:
+            //      -1  出错
+            //      0   成功
+            int nRet = SIPUtility.ParseMessage(text,
+                out BaseMessage message,
+                out string error);
+            Assert.AreEqual(0, nRet); // 检查返回值
+
+            var request = message as ItemStatusUpdateResponse_20;
+            Assert.IsTrue(request != null); // 检查解析对象
+
+            string retText = request.ToText();
+            Assert.AreEqual(text, retText); // 检查原始字符串和转成对象后输出字符串是否一致
+        }
+
+        #endregion
     }
 }

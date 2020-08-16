@@ -180,6 +180,16 @@ namespace DigitalPlatform.SIP2
                         message = new HoldResponse_16();
                         break;
                     }
+                case "19":
+                    {
+                        message = new ItemStatusUpdate_19();
+                        break;
+                    }
+                case "20":
+                    {
+                        message = new ItemStatusUpdateResponse_20();
+                        break;
+                    }
                 default:
                     error = "不支持的命令'" + cmdIdentifiers + "'";
                     return -1;
