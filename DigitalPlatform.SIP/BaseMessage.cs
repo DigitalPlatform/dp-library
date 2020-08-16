@@ -193,7 +193,7 @@ namespace DigitalPlatform.SIP2
             get
             {
                 // 2020/8/14，因为AF是重复字段，所以把所有值用逗号组合起来，如果前端想自己拼装，请调AF_ScreenMessage_List
-                List<VariableLengthField> list= this.GetVariableFieldList(SIPConst.F_AF_ScreenMessage);
+                List<VariableLengthField> list = this.GetVariableFieldList(SIPConst.F_AF_ScreenMessage);
                 string text = "";
                 foreach (VariableLengthField one in list)
                 {
@@ -202,6 +202,17 @@ namespace DigitalPlatform.SIP2
                     text += one.Value;
                 }
                 return text;
+            }
+            set
+            {
+                // 2020/8/16注意赋值的时候，只给一个字段赋值（GetVariableField是找最后一个字段，一般情况下dp2 response命令只有一个AF）。
+                VariableLengthField field = this.GetVariableField(SIPConst.F_AF_ScreenMessage);
+                if (field == null)
+                {
+                    field = new VariableLengthField(SIPConst.F_AF_ScreenMessage, false, true);
+                    this.VariableLengthFields.Add(field);
+                }
+                field.Value = value;
             }
         }
 
@@ -229,6 +240,17 @@ namespace DigitalPlatform.SIP2
                     text += one.Value;
                 }
                 return text;
+            }
+            set
+            {
+                // 2020/8/16注意赋值的时候，只给一个字段赋值（GetVariableField是找最后一个字段，一般情况下dp2 response命令只有一个AG）。
+                VariableLengthField field = this.GetVariableField(SIPConst.F_AG_PrintLine);
+                if (field == null)
+                {
+                    field = new VariableLengthField(SIPConst.F_AG_PrintLine, false, true);
+                    this.VariableLengthFields.Add(field);
+                }
+                field.Value = value;
             }
         }
 
