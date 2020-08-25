@@ -252,6 +252,10 @@ namespace DigitalPlatform.Z3950
                 nLen++;
             }
 
+            // 2020/8/25
+            if (nLen == 0)
+                throw new Exception($"位置 {this.m_nOffs} 应出现一个 token ('{this.m_strOrgExpression.Insert(this.m_nOffs, "^")}' 中符号 ^ 位置)");
+
             this.m_strToken = this.m_strOrgExpression.Substring(this.m_nOffs, nLen);
             m_nType = GetReserveType(m_strToken);
 
