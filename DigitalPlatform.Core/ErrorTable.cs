@@ -33,7 +33,11 @@ namespace DigitalPlatform.Core
             _lock.EnterWriteLock();
             try
             {
-                _globalErrorTable[type] = error;
+                // 2020/9/8
+                if (type == null)
+                    _globalErrorTable.Clear();
+                else
+                    _globalErrorTable[type] = error;
             }
             finally
             {
