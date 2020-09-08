@@ -43,6 +43,20 @@ namespace DigitalPlatform.Core
             _setError?.Invoke(GetError());
         }
 
+        // 获得特定类型的错误
+        public string GetError(string type)
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                return _globalErrorTable[type] as string;
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
+
         // 合成全局区域错误字符串，用于刷新显示
         public string GetError()
         {
