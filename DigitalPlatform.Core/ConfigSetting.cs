@@ -13,6 +13,15 @@ namespace DigitalPlatform.Core
         XmlDocument _dom = new XmlDocument();
         string _filename = "";
 
+        // 2020/9/16
+        public string FileName
+        {
+            get
+            {
+                return _filename;
+            }
+        }
+
         bool _changed = false;
         public bool Changed
         {
