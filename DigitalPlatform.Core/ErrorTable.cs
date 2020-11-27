@@ -73,7 +73,7 @@ namespace DigitalPlatform.Core
                 {
                     string error = _globalErrorTable[type] as string;
                     if (string.IsNullOrEmpty(error) == false)
-                        errors.Add(error.Replace("\r\n", "\n").TrimEnd(new char[] { '\n', ' ' }));
+                        errors.Add(type + ": " + error.Replace("\r\n", "\n").TrimEnd(new char[] { '\n', ' ' }));
                 }
             }
             finally
