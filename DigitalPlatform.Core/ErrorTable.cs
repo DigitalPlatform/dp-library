@@ -25,7 +25,9 @@ namespace DigitalPlatform.Core
         }
 
         // 设置全局区域错误字符串
-        public void SetError(string type, string error)
+        public void SetError(string type, 
+            string error,
+            bool has_type = false)
         {
             if (string.IsNullOrEmpty(error) == false)
                 error = error.Replace("\r\n", ";").TrimEnd(new char[] { ';', ' ' });
@@ -44,7 +46,7 @@ namespace DigitalPlatform.Core
                 _lock.ExitWriteLock();
             }
 
-            _setError?.Invoke(GetError());
+            _setError?.Invoke(GetError(has_type));
         }
 
         // 获得特定类型的错误
@@ -62,7 +64,7 @@ namespace DigitalPlatform.Core
         }
 
         // 合成全局区域错误字符串，用于刷新显示
-        public string GetError()
+        public string GetError(bool has_type = false)
         {
             List<string> errors = new List<string>();
 
@@ -73,7 +75,12 @@ namespace DigitalPlatform.Core
                 {
                     string error = _globalErrorTable[type] as string;
                     if (string.IsNullOrEmpty(error) == false)
-                        errors.Add(type + ": " + error.Replace("\r\n", "\n").TrimEnd(new char[] { '\n', ' ' }));
+                    {
+                        if (has_type)
+                            errors.Add(type + ": " + error.Replace("\r\n", "\n").TrimEnd(new char[] { '\n', ' ' }));
+                        else
+                            errors.Add(error.Replace("\r\n", "\n").TrimEnd(new char[] { '\n', ' ' }));
+                    }
                 }
             }
             finally
