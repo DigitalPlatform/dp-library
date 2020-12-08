@@ -296,6 +296,47 @@ namespace DigitalPlatform.SIP2.Response
             }
         }
 
+        // 2020/12/8
+        public string KC_CallNo_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_KC_CallNo);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_KC_CallNo, value);
+            }
+        }
+
+        // 2020/12/8
+        // variable-length optional field
+        public string KQ_PermanentShelfNo_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_KQ_PermanentShelfNo);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_KQ_PermanentShelfNo, value);
+            }
+        }
+
+        // 2020/12/8
+        public string KP_CurrentShelfNo_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_KP_CurrentShelfNo);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_KP_CurrentShelfNo, value);
+            }
+        }
+
+
         // 2020/8/14 AF,AG是可重复字段，该成员统一放在BaseMessage里
         /*
         //variable-length optional field

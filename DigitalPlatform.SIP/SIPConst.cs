@@ -235,6 +235,17 @@ namespace DigitalPlatform.SIP2
         //valid patron password CQ
         public const string F_CQ_ValidPatronPassword = "CQ";
 
+        //===K===
+
+        // call no	KC	可选	索取号，dp2扩展字段。
+        public const string F_KC_CallNo = "KC";
+
+        // permanent shelf no	KQ	可选	永久架位号，dp2扩展字段。
+        public const string F_KQ_PermanentShelfNo = "KQ";
+
+        // current shelf no	KP	可选 	当前架位号，dp2扩展字段。
+        public const string F_KP_CurrentShelfNo = "KP";
+
         #endregion
 
         // 缓冲区长度
