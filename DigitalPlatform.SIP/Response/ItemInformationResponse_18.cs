@@ -28,37 +28,40 @@ namespace DigitalPlatform.SIP2.Response
             //==后面变长字段
             //<hold queue length><due date><recall date><hold pickup date>
             //CF	AF	CJ	CM
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CF_HoldQueueLength, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AH_DueDate, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CJ_RecallDate, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CM_HoldPickupDate, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CF_HoldQueueLength, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AH_DueDate, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CJ_RecallDate, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CM_HoldPickupDate, false));
 
             //<item identifier><title identifier><owner><currency type>
             //AB AJ	BG	BH	
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AB_ItemIdentifier, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AJ_TitleIdentifier, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BG_Owner, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BH_CurrencyType, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BG_Owner, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BH_CurrencyType, false));
 
             //<fee amount><media type><permanent location><current location>
             //BV	CK	AQ	AP	
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BV_FeeAmount, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CK_MediaType, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AQ_PermanentLocation, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AP_CurrentLocation, false ));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_BV_FeeAmount, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CK_MediaType, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AQ_PermanentLocation, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AP_CurrentLocation, false));
 
             //<item properties><screen message><print line>
             //CH	AF	AG
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CH_ItemProperties, false ));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false,true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CH_ItemProperties, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false, true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false, true));
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
 
+            // 2020/12/8
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KC_CallNo, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KP_CurrentShelfNo, false));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KQ_PermanentShelfNo, false));
         }
 
-        
         //2-char, fixed-length required field (00 thru 99)
         public string CirculationStatus_2
         {
