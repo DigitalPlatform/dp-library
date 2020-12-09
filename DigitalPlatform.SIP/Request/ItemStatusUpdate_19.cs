@@ -29,6 +29,15 @@ namespace DigitalPlatform.SIP2.Request
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AB_ItemIdentifier, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AC_TerminalPassword, false ));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CH_ItemProperties, true));
+
+
+            // 2020/12/9增加 dp2扩展字段
+            //永久架位号
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KQ_PermanentShelfNo, false));
+            //当前架位号
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KP_CurrentShelfNo, false));
+            //册状态,可选	0丢失 1编目 2在馆 ，dp2扩展字段。
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_HS_HoldingState, false));
         }
 
         

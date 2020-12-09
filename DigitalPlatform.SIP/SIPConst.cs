@@ -246,6 +246,9 @@ namespace DigitalPlatform.SIP2
         // current shelf no	KP	可选 	当前架位号，dp2扩展字段。
         public const string F_KP_CurrentShelfNo = "KP";
 
+        //holding state	HS	可选	0丢失 1编目 2在馆 ，dp2扩展字段。
+        public const string F_HS_HoldingState = "HS";
+
         #endregion
 
         // 缓冲区长度
