@@ -31,7 +31,11 @@ namespace DigitalPlatform.SIP2.Request
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_CH_ItemProperties, true));
 
 
-            // 2020/12/9增加 dp2扩展字段
+            // 2020/12/9 dp2扩展字段
+            //永久馆藏地
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AQ_PermanentLocation, false));
+            //当前馆藏地
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AP_CurrentLocation, false));
             //永久架位号
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_KQ_PermanentShelfNo, false));
             //当前架位号
@@ -40,7 +44,7 @@ namespace DigitalPlatform.SIP2.Request
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_HS_HoldingState, false));
         }
 
-        
+
         // 18-char, fixed-length required field:  YYYYMMDDZZZZHHMMSS
         public string TransactionDate_18
         {
@@ -84,7 +88,7 @@ namespace DigitalPlatform.SIP2.Request
         }
 
         //  variable-length optional field
-        public string AC_TerminalPassowrd_o
+        public string AC_TerminalPassword_o
         {
             get
             {
@@ -108,6 +112,75 @@ namespace DigitalPlatform.SIP2.Request
                 this.SetVariableFieldValue(SIPConst.F_CH_ItemProperties, value);
             }
         }
-        
+
+        // 2020/12/9，dp2扩展字段
+        //variable-length optional field
+        public string AQ_PermanentLocation_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_AQ_PermanentLocation);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_AQ_PermanentLocation, value);
+            }
+        }
+
+        // 2020/12/9，dp2扩展字段
+        //variable-length optional field
+        public string AP_CurrentLocation_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_AP_CurrentLocation);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_AP_CurrentLocation, value);
+            }
+        }
+
+
+        // 2020/12/9，dp2扩展字段
+        // variable-length optional field
+        public string KQ_PermanentShelfNo_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_KQ_PermanentShelfNo);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_KQ_PermanentShelfNo, value);
+            }
+        }
+
+        // 2020/12/9，dp2扩展字段
+        public string KP_CurrentShelfNo_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_KP_CurrentShelfNo);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_KP_CurrentShelfNo, value);
+            }
+        }
+
+        // 2020/12/9，dp2扩展字段
+        public string HS_HoldingState_o
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_HS_HoldingState);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_HS_HoldingState, value);
+            }
+        }
+
     }
 }
