@@ -178,6 +178,15 @@ bool value)
             }
             catch (FileNotFoundException)
             {
+                // 2021/3/2
+                if (File.Exists(backupFileName))
+                {
+                    // 尝试从备份文件装载
+                    dom.Load(backupFileName);
+                    _changed = true;
+                    return;
+                }
+
                 if (auto_create)
                 {
                     _dom.LoadXml("<root />");
@@ -207,6 +216,11 @@ bool value)
         {
             var directory = Path.GetDirectoryName(filename);
             var tempFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
+
+            // 2021/3/2
+            // 删除以前残留的临时文件
+            if (File.Exists(tempFileName))
+                File.Delete(tempFileName);
 
             // 先保存到临时文件
             dom.Save(tempFileName);
