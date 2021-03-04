@@ -19,9 +19,13 @@ namespace DigitalPlatform.SIP2.Response
             //==前面的定长字段
             this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_Ok, 1));
 
+            // 2021/3/4
+            // 标准里面没有的两个字段，方便观察错误信息
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false, true)); //重复字段
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false, true)); //重复字段
+
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
-
         }
 
         //1-char, fixed-length required field:  0 or 1.
