@@ -370,6 +370,9 @@ namespace DigitalPlatform.Z3950
 
         public class SearchResult : Result
         {
+            // 2021/3/10
+            public string Query { get; set; }   // 检索式
+
             public long ResultCount { get; set; }
 
             public SearchResult()
@@ -377,15 +380,24 @@ namespace DigitalPlatform.Z3950
 
             }
 
+            /*
             public SearchResult(Result source)
             {
+                Result.CopyTo(source, this);
+            }
+            */
+
+            // 2021/3/10
+            public SearchResult(string query, Result source)
+            {
+                Query = query;
                 Result.CopyTo(source, this);
             }
 
             public override string ToString()
             {
                 StringBuilder text = new StringBuilder(base.ToString());
-                text.Append("ResultCount=" + this.ResultCount + "\r\n");
+                text.Append($"Query={Query},ResultCount={ ResultCount }\r\n");
                 return text.ToString();
             }
         }
@@ -475,7 +487,7 @@ namespace DigitalPlatform.Z3950
                 RecvResult result = await this._channel.SendAndRecv(
         baPackage).ConfigureAwait(false);
                 if (result.Value == -1)
-                    return new SearchResult(result);
+                    return new SearchResult(strQuery, result);
 
 #if NO
 #if DEBUG
@@ -514,6 +526,7 @@ namespace DigitalPlatform.Z3950
 #endif
             {
                 SearchResult result = new SearchResult();
+                result.Query = strQuery;
                 result.ResultCount = (int)search_response.m_lResultCount;
 
                 if (search_response.m_nSearchStatus != 0)   // 不一定是1
