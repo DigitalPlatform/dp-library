@@ -125,6 +125,16 @@ namespace DigitalPlatform.SIP2
                         message = new RenewResponse_30();
                         break;
                     }
+                case "65":
+                    {
+                        message = new RenewAll_65();
+                        break;
+                    }
+                case "66":
+                    {
+                        message = new RenewAllResponse_66();
+                        break;
+                    }
                 case "37":
                     {
                         message = new FeePaid_37();
