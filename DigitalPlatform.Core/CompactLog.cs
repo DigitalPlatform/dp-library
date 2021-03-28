@@ -92,6 +92,58 @@ namespace DigitalPlatform.Core
 
             return count;
         }
+
+        // 2021/3/28
+        // 清除一个或全部条目
+        // parameters:
+        //      fmt 要清除的条目格式。如果为 null 或 "" 则表示清除所有累积的条目
+        // return:
+        //      清除的条目数
+        public int RemoveEntry(string fmt = null)
+        {
+            _lock.EnterWriteLock();
+            try
+            {
+                if (string.IsNullOrEmpty(fmt) == false)
+                {
+                    if (_table.ContainsKey(fmt))
+                    {
+                        _table.Remove(fmt);
+                        return 1;
+                    }
+                    return 0;
+                }
+                else
+                {
+                    var count = _table.Count;
+                    if (count > 0)
+                        _table.Clear();
+                    return count;
+                }
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
+            }
+        }
+
+        // 2021/3/28
+        // 条目数
+        public int EntryCount
+        {
+            get
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _table.Count;
+                }
+                finally
+                {
+                    _lock.ExitReadLock();
+                }
+            }
+        }
     }
 
     // 条目
