@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalPlatform.Text;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -32,13 +33,18 @@ namespace DigitalPlatform.Core
                 if (_table.Count >= MaxEntryCount)
                     return "Entry 数超过 " + MaxEntryCount + "，没有记入日志";
 
+                DateTime now = DateTime.Now;
                 if (_table.ContainsKey(fmt) == false)
                 {
-                    entry = new CompactEntry { Key = fmt, StartTime = DateTime.Now };
+                    entry = new CompactEntry { Key = fmt, StartTime = now };
                     _table.Add(fmt, entry);
                 }
                 else
+                {
                     entry = (CompactEntry)_table[fmt];
+                    if (entry.StartTime == DateTime.MinValue)
+                        entry.StartTime = now;
+                }
             }
             finally
             {
@@ -54,7 +60,8 @@ namespace DigitalPlatform.Core
         }
 
         // 把累积的条目一次性写入日志文件
-        public int WriteToLog(delegate_writeLog func_writeLog)
+        public int WriteToLog(delegate_writeLog func_writeLog,
+            string style = "")
         {
             int count = 0;
             // List<string> keys = new List<string>();
@@ -66,7 +73,7 @@ namespace DigitalPlatform.Core
                     CompactEntry entry = _table[key];
                     lock (entry)
                     {
-                        count += entry.WriteToLog(func_writeLog);
+                        count += entry.WriteToLog(func_writeLog, style);
                     }
                 }
             }
@@ -91,6 +98,37 @@ namespace DigitalPlatform.Core
 #endif
 
             return count;
+        }
+
+        // 获得条目
+        public List<CompactEntry> GetEntry(string fmt = null)
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                if (string.IsNullOrEmpty(fmt) == false)
+                {
+                    if (_table.ContainsKey(fmt))
+                    {
+                        return new List<CompactEntry>() { _table[fmt] };
+                    }
+                    return new List<CompactEntry>();
+                }
+                else
+                {
+                    var results = new List<CompactEntry>();
+                    foreach (string key in _table.Keys)
+                    {
+                        results.Add(_table[key]);
+                    }
+                    return results;
+                }
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+
         }
 
         // 2021/3/28
@@ -167,19 +205,36 @@ namespace DigitalPlatform.Core
 
             if (this.Datas.Count < MaxDataCount)
             {
-                CompactData data = new CompactData { Args = args };
+                DateTime now = DateTime.Now;
+                CompactData data = new CompactData
+                {
+                    Args = args,
+                    Ticks = now.Ticks - StartTime.Ticks // 2021/3/23
+                };
                 Datas.Add(data);
             }
             TotalCount++;
         }
 
         public int WriteToLog(delegate_writeLog func_writeLog,
-            string style = "display")
+            string style = "")
         {
             if (this.Datas.Count == 0)
-                return 0;
+            {
+                // 2021/3/28
+                if (StringUtil.IsInList("reset_start_time", style))
+                    this.StartTime = DateTime.MinValue;
 
-            if (style == "display")
+                return 0;
+            }
+
+            string entry_time_format = StringUtil.GetParameterByPrefix(style, "entry_time_format");
+            string data_format = StringUtil.GetParameterByPrefix(style, "data_format");
+
+            if (string.IsNullOrEmpty(entry_time_format))
+                entry_time_format = "HH:mm:ss";
+
+            if (style == "display" || string.IsNullOrEmpty(data_format) || data_format == "display")
             {
                 // 适合观看的格式
                 StringBuilder text = new StringBuilder();
@@ -188,7 +243,7 @@ namespace DigitalPlatform.Core
                 int i = 0;
                 foreach (CompactData data in this.Datas)
                 {
-                    text.Append((i + 1).ToString() + ") " + (new DateTime(this.StartTime.Ticks + data.Ticks)).ToString("HH:mm:ss") + ":");
+                    text.Append((i + 1).ToString() + ") " + data.GetString(this.StartTime, entry_time_format) + ":");
                     text.Append(string.Format(this.Key, data.Args) + "\r\n");
                     i++;
                 }
@@ -205,16 +260,28 @@ namespace DigitalPlatform.Core
                 int i = 0;
                 foreach (CompactData data in this.Datas)
                 {
-                    text.Append((i + 1).ToString() + ") " + data.GetString(this.StartTime) + "\r\n");
+                    // 逐项显示 data.Args
+                    List<string> args = new List<string>();
+                    foreach (var arg in data.Args)
+                    {
+                        args.Add(arg == null ? "(null)" : arg.ToString());
+                    }
+
+                    text.Append((i + 1).ToString() + ") " + data.GetString(this.StartTime, entry_time_format) + " " + StringUtil.MakePathList(args, ",") + "\r\n");
                     i++;
                 }
                 if (i < this.TotalCount)
                     text.Append("... (余下 " + (this.TotalCount - i) + " 项被略去)");
                 func_writeLog(text.ToString());
             }
+
             int count = (int)this.TotalCount;
             this.Datas.Clear(); // 写入日志后，清除内存
             this.TotalCount = 0;
+
+            // 2021/3/28
+            if (StringUtil.IsInList("reset_start_time", style))
+                this.StartTime = DateTime.MinValue;
             return count;
         }
     }
@@ -228,10 +295,10 @@ namespace DigitalPlatform.Core
         // 参数值列表
         public object[] Args { get; set; }
 
-        public string GetString(DateTime start)
+        public string GetString(DateTime start, string time_fmt = "HH:mm:ss")
         {
             StringBuilder text = new StringBuilder();
-            text.Append((new DateTime(start.Ticks + this.Ticks)).ToShortTimeString() + ":");
+            text.Append((new DateTime(start.Ticks + this.Ticks)).ToString(time_fmt) + ":");
             int i = 0;
             foreach (object o in Args)
             {

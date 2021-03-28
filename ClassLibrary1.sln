@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalPlatform.ServiceProc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestSIP", "UnitTestSIP\UnitTestSIP.csproj", "{3BD4016E-ABC4-42A7-81DB-6E20F7C222D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMarcQuery", "UnitTestMarcQuery\UnitTestMarcQuery.csproj", "{575AA455-B28B-4502-9EF8-A400D0DA632E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestMarcQuery", "UnitTestMarcQuery\UnitTestMarcQuery.csproj", "{575AA455-B28B-4502-9EF8-A400D0DA632E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestCompactLog", "UnitTestCompactLog\UnitTestCompactLog.csproj", "{D13CF19A-E873-4D1C-B81A-D09299D24C3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{575AA455-B28B-4502-9EF8-A400D0DA632E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{575AA455-B28B-4502-9EF8-A400D0DA632E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{575AA455-B28B-4502-9EF8-A400D0DA632E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13CF19A-E873-4D1C-B81A-D09299D24C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13CF19A-E873-4D1C-B81A-D09299D24C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13CF19A-E873-4D1C-B81A-D09299D24C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13CF19A-E873-4D1C-B81A-D09299D24C3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
