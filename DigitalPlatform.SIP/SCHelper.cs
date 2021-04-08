@@ -153,7 +153,7 @@ namespace DigitalPlatform.SIP2
                 CN_LoginUserId_r = username,
                 CO_LoginPassword_r = password,
             };
-            request.SetDefaulValue();
+            request.SetDefaultValue();
 
             // 发送和接收消息
             string requestText = request.ToText();
@@ -255,7 +255,7 @@ namespace DigitalPlatform.SIP2
                 AB_ItemIdentifier_r = itemBarcode,
                 AO_InstitutionId_r = SIPConst.AO_Value,
             };
-            request.SetDefaulValue();//设置其它默认值
+            request.SetDefaultValue();//设置其它默认值
 
             // 发送和接收消息
             string requestText = request.ToText();
@@ -321,7 +321,7 @@ namespace DigitalPlatform.SIP2
                 AB_ItemIdentifier_r = itemBarcode,
                 AO_InstitutionId_r = SIPConst.AO_Value,
             };
-            request.SetDefaulValue();//设置其它默认值
+            request.SetDefaultValue();//设置其它默认值
 
             // 发送和接收消息
             string requestText = request.ToText();
@@ -385,7 +385,7 @@ namespace DigitalPlatform.SIP2
                 AA_PatronIdentifier_r = patronBarcode,
                 AB_ItemIdentifier_o = itemBarcode,
             };
-            request.SetDefaulValue();//设置其它默认值
+            request.SetDefaultValue();//设置其它默认值
 
             // 发送和接收消息
             string requestText = request.ToText();
@@ -443,7 +443,7 @@ namespace DigitalPlatform.SIP2
                 AO_InstitutionId_r = SIPConst.AO_Value,
                 AA_PatronIdentifier_r = patronBarcode,
             };
-            request.SetDefaulValue();//设置其它默认值
+            request.SetDefaultValue();//设置其它默认值
 
             // 发送和接收消息
             string requestText = request.ToText();
@@ -498,7 +498,7 @@ namespace DigitalPlatform.SIP2
                 AO_InstitutionId_r = SIPConst.AO_Value,
                 AB_ItemIdentifier_r = itemBarcode,
             };
-            request.SetDefaulValue();//设置其它默认值
+            request.SetDefaultValue();//设置其它默认值
 
             // 发送和接收消息
             string requestText = request.ToText();

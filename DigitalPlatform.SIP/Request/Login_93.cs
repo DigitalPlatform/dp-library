@@ -36,10 +36,11 @@ namespace DigitalPlatform.SIP2.Request
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber,false));
         }
 
-        public override void SetDefaulValue()
+        public override void SetDefaultValue()
         {
-            UIDAlgorithm_1 = " "; //默认设为1个空格
-            PWDAlgorithm_1 = " ";//默认设为1个空格
+            // https://github.com/DigitalPlatform/dp2/issues/756#issuecomment-733002892
+            UIDAlgorithm_1 = "0"; // 0 表示不加密
+            PWDAlgorithm_1 = "0";// 0 表示不加密
         }
 
        

@@ -41,7 +41,7 @@ namespace DigitalPlatform.SIP2.Request
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
         }
 
-        public override void SetDefaulValue()
+        public override void SetDefaultValue()
         {
             NoBlock_1 = "N"; //默认设为N
             AP_CurrentLocation_r = "";

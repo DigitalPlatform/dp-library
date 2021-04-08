@@ -374,7 +374,7 @@ namespace DigitalPlatform.SIP2
             return 0;
         }
 
-        public virtual void SetDefaulValue()
+        public virtual void SetDefaultValue()
         {
         }
     }

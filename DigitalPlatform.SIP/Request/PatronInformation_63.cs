@@ -37,7 +37,7 @@ namespace DigitalPlatform.SIP2.Request
 
         }
 
-        public override void SetDefaulValue()
+        public override void SetDefaultValue()
         {
             Language_3 = "019"; //Chinese 019
             Summary_10 = "  Y       ";

@@ -44,7 +44,7 @@ namespace DigitalPlatform.SIP2.Request
 
         }
 
-        public override void SetDefaulValue()
+        public override void SetDefaultValue()
         {
             SCRenewalPolicy_1 = "Y"; //默认设为Y,允许续借
             NoBlock_1 = "N";

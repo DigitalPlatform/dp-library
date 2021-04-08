@@ -44,7 +44,7 @@ namespace DigitalPlatform.SIP2.Request
 
         }
 
-        public override void SetDefaulValue()
+        public override void SetDefaultValue()
         {
             ThirdPartyAllowed_1 = "N"; //默认设为N,不允许第三方续借
             NoBlock_1 = "N";
