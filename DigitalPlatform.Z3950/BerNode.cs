@@ -378,7 +378,12 @@ namespace DigitalPlatform.Z3950
 
                 strTemp = GetNumber(strValue, i);
 
-                value = Convert.ToInt64(strTemp);
+                // value = Convert.ToInt64(strTemp);
+                // 2021/6/15
+                if (Int64.TryParse(strTemp, out value) == false)
+                {
+                    throw new ArgumentException($"OID 字符串 '{strValue}' 的局部 '{strTemp}' 格式不正确，应为一个纯数字");
+                }
 
                 if (i == 0)  /* first 2 numbers get special treatment */
                 {
@@ -393,7 +398,14 @@ namespace DigitalPlatform.Z3950
                     i = nRet + 1;
 
                     strTemp = GetNumber(strValue, i);
-                    value = value * 40 + Convert.ToInt64(strTemp);
+
+                    // 2021/6/15
+                    if (Int64.TryParse(strTemp, out Int64 temp) == false)
+                    {
+                        throw new ArgumentException($"OID 字符串 '{strValue}' 的局部 '{strTemp}' 格式不正确，应为一个纯数字");
+                    }
+
+                    value = value * 40 + temp;  // Convert.ToInt64(strTemp);
                 }
 
                 if (value >= 0x80)
