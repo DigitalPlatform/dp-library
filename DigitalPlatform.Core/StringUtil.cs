@@ -3462,6 +3462,10 @@ string strTimestamp)
             bool bRemoveMultiple,
             ref string strList)
         {
+            // 2021/7/16
+            if (strList == null)
+                return false;
+
             string[] sub_parts = strSub.Split(new char[] { ',' });
 
             string[] list_parts = strList.Split(new char[] { ',' });
