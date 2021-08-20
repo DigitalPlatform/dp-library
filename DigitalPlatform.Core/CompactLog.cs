@@ -295,6 +295,7 @@ namespace DigitalPlatform.Core
         // 参数值列表
         public object[] Args { get; set; }
 
+        /*
         public string GetString(DateTime start, string time_fmt = "HH:mm:ss")
         {
             StringBuilder text = new StringBuilder();
@@ -310,6 +311,31 @@ namespace DigitalPlatform.Core
 
             return text.ToString();
         }
+        */
+
+        public string GetString(DateTime start, string time_fmt = "HH:mm:ss")
+        {
+            StringBuilder text = new StringBuilder();
+            text.Append((new DateTime(start.Ticks + this.Ticks)).ToString(time_fmt) + ":");
+            if (Args == null) // 2021/8/20 巩固
+            {
+                text.Append("(Args is null)");
+            }
+            else
+            {
+                int i = 0;
+                foreach (object o in Args)
+                {
+                    if (i > 0)
+                        text.Append(",");
+                    text.Append(o == null ? "(null)" : o.ToString());   // 2021/8/20 巩固
+                    i++;
+                }
+            }
+
+            return text.ToString();
+        }
+
     }
 
     public delegate void delegate_writeLog(string text);

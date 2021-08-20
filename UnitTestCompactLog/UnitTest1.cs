@@ -95,7 +95,5 @@ namespace UnitTestCompactLog
             });
             Assert.AreEqual(0, write_count);
         }
-
-
     }
 }
