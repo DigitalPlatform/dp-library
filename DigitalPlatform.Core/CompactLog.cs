@@ -243,7 +243,7 @@ namespace DigitalPlatform.Core
                 int i = 0;
                 foreach (CompactData data in this.Datas)
                 {
-                    text.Append((i + 1).ToString() + ") " + data.GetString(this.StartTime, entry_time_format) + ":");
+                    text.Append((i + 1).ToString() + ") " + data.GetTimeString(this.StartTime, entry_time_format) + ":");
                     text.Append(string.Format(this.Key, data.Args) + "\r\n");
                     i++;
                 }
@@ -312,6 +312,12 @@ namespace DigitalPlatform.Core
             return text.ToString();
         }
         */
+
+        // 2021/9/4
+        public string GetTimeString(DateTime start, string time_fmt = "HH:mm:ss")
+        {
+            return (new DateTime(start.Ticks + this.Ticks)).ToString(time_fmt);
+        }
 
         public string GetString(DateTime start, string time_fmt = "HH:mm:ss")
         {
