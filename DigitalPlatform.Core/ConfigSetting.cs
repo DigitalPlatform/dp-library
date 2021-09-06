@@ -212,6 +212,28 @@ bool value)
             }
         }
 
+        /*
+        // 2021/9/6
+        static bool BackupFile(string filename)
+        {
+            if (File.Exists(filename) == false)
+                return false;
+
+            var directory = Path.GetDirectoryName(filename);
+            var backup_filename = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
+
+            // 先验证一下文件合法，才进行拷贝
+            {
+                XmlDocument domVerify = new XmlDocument();
+                // 此处可能抛出异常
+                domVerify.Load(backup_filename);
+            }
+
+            File.Copy(filename, backup_filename, true);
+            return true;
+        }
+        */
+
         // https://social.msdn.microsoft.com/Forums/vstudio/en-US/11535a79-e565-4f6d-bb19-e47054508133/xmldocumentsave-0-length-files-half-written-files-etc
         public static void SafeSave(XmlDocument dom, string filename)
         {
