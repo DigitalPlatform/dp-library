@@ -212,6 +212,47 @@ bool value)
             }
         }
 
+        // https://social.msdn.microsoft.com/Forums/vstudio/en-US/11535a79-e565-4f6d-bb19-e47054508133/xmldocumentsave-0-length-files-half-written-files-etc
+        public static void SafeSave(XmlDocument dom, string filename)
+        {
+            var directory = Path.GetDirectoryName(filename);
+            var tempFileName = Path.Combine(directory, Path.GetFileName(filename) + BACKUP_EXTENSION);
+
+            // 2021/3/2
+            // 删除以前残留的临时文件
+            if (File.Exists(tempFileName))
+                File.Delete(tempFileName);
+
+            // 先保存到临时文件
+            // dom.Save(tempFileName);
+
+            {
+                var content = dom.DocumentElement.OuterXml;
+                File.WriteAllText(tempFileName, content, Encoding.UTF8);
+            }
+
+            // 2021/9/6
+            // 验证一下临时文件是否完整合法
+            {
+                XmlDocument domVerify = new XmlDocument();
+                try
+                {
+                    domVerify.Load(tempFileName);
+                }
+                catch (Exception ex)
+                {
+                    // 这时留下临时文件和并未伤害的前次正式文件，等下次 SaveLoad() 时候处理
+                    throw new Exception($"SafeSave() 在写入临时文件 '{tempFileName}' 后验证失败", ex);
+                }
+            }
+
+            // 删除正式文件
+            File.Delete(filename);
+            // 临时文件改名为正式文件
+            File.Move(tempFileName, filename);
+        }
+
+#if NO
         public static void SafeSave(XmlDocument dom, string filename)
         {
             var directory = Path.GetDirectoryName(filename);
@@ -229,6 +270,9 @@ bool value)
             // 临时文件改名为正式文件
             File.Move(tempFileName, filename);
         }
+
+#endif
+
 #if NO
         public static void SafeSave(XmlDocument dom, string filename)
         {
