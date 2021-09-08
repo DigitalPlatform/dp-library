@@ -37,7 +37,19 @@ namespace DigitalPlatform.Core
             }
         }
 
-        public ConfigSetting(string filename, bool auto_create)
+        // 调试信息。当打开文件时候，记载打开的过程
+        StringBuilder _debugInfo = null;
+        public string DebugInfo
+        {
+            get
+            {
+                return _debugInfo?.ToString();
+            }
+        }
+
+        public ConfigSetting(string filename,
+            bool auto_create,
+            bool build_debugInfo = false)
         {
 #if NO
             try
@@ -52,6 +64,10 @@ namespace DigitalPlatform.Core
                     throw;
             }
 #endif
+            // 2021/9/9
+            if (build_debugInfo)
+                _debugInfo = new StringBuilder();
+
             SafeLoad(_dom,
     filename,
     auto_create);
@@ -59,9 +75,13 @@ namespace DigitalPlatform.Core
             _filename = filename;
         }
 
-        public static ConfigSetting Open(string filename, bool auto_create)
+        public static ConfigSetting Open(string filename,
+            bool auto_create,
+            bool build_debugInfo = false)
         {
-            ConfigSetting config = new ConfigSetting(filename, auto_create);
+            ConfigSetting config = new ConfigSetting(filename,
+                auto_create,
+                build_debugInfo);
             return config;
         }
 
@@ -161,9 +181,11 @@ bool value)
             FileInfo fi = new FileInfo(filename);
             if (File.Exists(filename) && fi.Length == 0)
             {
+                _debugInfo?.AppendLine($"发现文件 {filename} 的尺寸为零");
                 var ret = RetryLoad(dom,
                     filename,
-                    backupFileName);
+                    backupFileName,
+                    this._debugInfo);
                 if (ret == true)
                     return;
 #if NO
@@ -199,18 +221,22 @@ bool value)
                 // TODO: 是否要把这种情况反馈给调主？
                 _dom.LoadXml("<root />");
                 _changed = true;
+                _debugInfo?.AppendLine($"加载 <root />");
                 return;
             }
 
             try
             {
                 dom.Load(filename);
+                _debugInfo?.AppendLine($"正常加载文件 {filename}");
             }
             catch (FileNotFoundException)
             {
+                _debugInfo?.AppendLine($"文件 {filename} 不存在");
                 var ret = RetryLoad(dom,
                     filename,
-                    backupFileName);
+                    backupFileName,
+                    this._debugInfo);
                 if (ret == true)
                     return;
 #if NO
@@ -246,6 +272,7 @@ bool value)
                 {
                     _dom.LoadXml("<root />");
                     _changed = true;
+                    _debugInfo?.AppendLine($"因 auto_create 为 true，加载 <root />");
                 }
                 else
                     throw;
@@ -254,11 +281,14 @@ bool value)
             {
                 throw;
             }
-            catch
+            catch (Exception ex)
             {
+                _debugInfo?.AppendLine($"文件 {filename} 加载时出现异常: {ex.Message}");
+
                 var ret = RetryLoad(dom,
                     filename,
-                    backupFileName);
+                    backupFileName,
+                    this._debugInfo);
                 if (ret == true)
                     return;
                 throw;
@@ -275,12 +305,14 @@ bool value)
             }
 
             // 装载成功后，立刻备份一次
-            SaveBackup(filename);
+            var back_filename = SaveBackup(filename);
+            _debugInfo?.AppendLine($"装载成功后，立即把内容备份到文件 {back_filename}");
         }
 
         bool RetryLoad(XmlDocument dom,
             string filename,
-            string backupFileName)
+            string backupFileName,
+            StringBuilder debugInfo)
         {
             if (File.Exists(backupFileName))
             {
@@ -289,11 +321,12 @@ bool value)
                 {
                     dom.Load(backupFileName);
                     _changed = true;
+                    debugInfo?.AppendLine($"尝试从临时文件 {backupFileName} 装载，成功");
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    debugInfo?.AppendLine($"尝试从临时文件 {backupFileName} 装载，失败: {ex.Message}");
                 }
             }
 
@@ -302,9 +335,18 @@ bool value)
             if (string.IsNullOrEmpty(back_file) == false)
             {
                 // 尝试从备份文件装载
-                dom.Load(back_file);
-                _changed = true;
-                return true;
+                try
+                {
+                    dom.Load(back_file);
+                    _changed = true;
+                    debugInfo?.AppendLine($"尝试从备份文件 {back_file} 装载，成功");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    debugInfo?.AppendLine($"尝试从备份文件 {back_file} 装载，失败: {ex.Message}");
+                    throw ex;
+                }
             }
             return false;
         }
@@ -377,7 +419,7 @@ bool value)
         public const int BACKUP_COUNT = 10;
 
         // 保存到备份文件
-        public void SaveBackup(string filename)
+        public string SaveBackup(string filename)
         {
             var filenames = BuildBackupFileNames(filename);
 
@@ -398,6 +440,7 @@ bool value)
 
             var new_filename = filenames[index].FileName;
             _dom.Save(new_filename);
+            return new_filename;
         }
 
         public static string GetNewestBackupFilename(string filename)
@@ -498,6 +541,4 @@ bool value)
         }
     }
 }
-
-
 
