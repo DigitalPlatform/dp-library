@@ -2640,6 +2640,13 @@ string strTimestamp)
                 return -1;
             }
 
+            // 2021/10/15
+            if (nValue + nNumber < 0)
+            {
+                strError = "数字值部分小于 0，无法继续创建新号码";
+                return -1;
+            }
+
             strNumber = Convert.ToString(nValue + nNumber).PadLeft(nWidth, '0');
             strResult = strHead + strNumber + strEnd;
 
