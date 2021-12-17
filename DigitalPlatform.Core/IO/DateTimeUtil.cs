@@ -309,7 +309,7 @@ namespace DigitalPlatform.IO
 
             throw new Exception("出版日期字符串 '" + strText + "' 格式不正确");
 
-            END1:
+        END1:
             // 检查一下时间字符串是否属于存在的时间
             string strTest = strText.Substring(0, 8);
 
@@ -338,6 +338,7 @@ namespace DigitalPlatform.IO
             return time1.Ticks - time2.Ticks;
         }
 
+#if OLD
         public static int Date8toRfc1123(string strOrigin,
 out string strTarget,
 out string strError)
@@ -353,7 +354,6 @@ out string strError)
                 strError = "源日期字符串 '" + strOrigin + "' 格式不正确，应为8字符";
                 return -1;
             }
-
 
             IFormatProvider culture = new CultureInfo("zh-CN", true);
 
@@ -371,9 +371,57 @@ out string strError)
             time = time.ToUniversalTime();
             strTarget = DateTimeUtil.Rfc1123DateTimeString(time);
 
-
             return 0;
         }
+#endif
+
+        // parameters:
+        //      strOrigin   8 字符的日期时间。本地时间
+        public static int Date8toRfc1123(string strOrigin,
+out string strTarget,
+out string strError)
+        {
+            strError = "";
+            strTarget = "";
+
+            // 格式为 20060625， 需要转换为rfc
+            if (strOrigin.Length != 8)
+            {
+                strError = "源日期字符串 '" + strOrigin + "' 格式不正确，应为8字符";
+                return -1;
+            }
+
+            DateTime time;
+            try
+            {
+                time = DateTimeUtil.Long8ToDateTime(strOrigin);
+            }
+            catch
+            {
+                strError = "日期字符串 '" + strOrigin + "' 字符串转换为DateTime对象时出错";
+                return -1;
+            }
+            /*
+            IFormatProvider culture = new CultureInfo("zh-CN", true);
+
+            DateTime time;
+            try
+            {
+                time = DateTime.ParseExact(strOrigin, "yyyyMMdd", culture);
+            }
+            catch
+            {
+                strError = "日期字符串 '" + strOrigin + "' 字符串转换为DateTime对象时出错";
+                return -1;
+            }
+            time = time.ToUniversalTime();
+            strTarget = DateTimeUtil.Rfc1123DateTimeString(time);
+            */
+
+            DateTimeUtil.Rfc1123DateTimeStringEx(time);
+            return 0;
+        }
+
 
         // 返回下一月日历上的同一天
         public static DateTime NextMonth(DateTime start)
