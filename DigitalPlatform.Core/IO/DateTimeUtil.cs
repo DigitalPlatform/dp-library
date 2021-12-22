@@ -418,7 +418,7 @@ out string strError)
             strTarget = DateTimeUtil.Rfc1123DateTimeString(time);
             */
 
-            DateTimeUtil.Rfc1123DateTimeStringEx(time);
+            strTarget = DateTimeUtil.Rfc1123DateTimeStringEx(time);
             return 0;
         }
 
