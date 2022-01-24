@@ -85,9 +85,22 @@ namespace DigitalPlatform.Core
             return config;
         }
 
+        // 2022/1/24
+        static string GetSection(string section)
+        {
+            if (string.IsNullOrEmpty(section) == true)
+                throw new ArgumentException("section 参数值不应为空");
+            if (char.IsDigit(section[0]) == true)
+                return "n_" + section;
+            return section;
+        }
+
         // 写入一个字符串值
         public string Set(string section, string entry, string value)
         {
+            // 2022/1/24
+            section = GetSection(section);
+
             XmlElement element = _dom.DocumentElement.SelectSingleNode(section) as XmlElement;
             if (element == null)
             {
@@ -106,6 +119,9 @@ namespace DigitalPlatform.Core
         // 读取一个字符串值
         public string Get(string section, string entry, string default_value = null)
         {
+            // 2022/1/24
+            section = GetSection(section);
+
             XmlElement element = _dom.DocumentElement.SelectSingleNode(section) as XmlElement;
             if (element == null)
                 return default_value;
