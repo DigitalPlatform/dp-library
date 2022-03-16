@@ -543,6 +543,7 @@ out strError);
             return StringUtil.MakePathList(results, ",");
         }
 
+#if REMOVED
         public static bool IsValidCMIS(string strText)
         {
             if (string.IsNullOrEmpty(strText))
@@ -597,6 +598,99 @@ out strError);
             if (string.Compare(strNumber, strEnd) > 0)
                 return false;
             return true;
+        }
+#endif
+        public static bool IsValidCMIS(string strText)
+        {
+            if (string.IsNullOrEmpty(strText))
+                return false;
+            if (strText.Length == 16)
+            {
+                if (IsPureNumber(strText))
+                    return true;
+                return false;
+            }
+
+            if (strText.Length == 19)
+            {
+                char ch = strText[0];
+                if (
+                    // ch == 'G' || ch == 'J' || ch == 'L'
+                    char.IsLetter(ch) && char.IsUpper(ch)
+                    )
+                {
+                    string strMiddle = strText.Substring(1, 16);    // 中间 16 位
+                    if (IsPureNumber(strMiddle) == false)
+                        return false;
+                    // 最后两位可能是数字或者大写字母
+                    if (char.IsLetterOrDigit(strText[18]) == false
+                        || char.IsLower(strText[18]) == true
+                        || char.IsLetterOrDigit(strText[17]) == false
+                        || char.IsLower(strText[17]) == true)
+                        return false;
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            // https://zhuanlan.zhihu.com/p/148362614#:~:text=%E5%85%A8%E5%9B%BD%E6%AD%A3%E5%BC%8F%E5%AD%A6%E7%B1%8D%E5%8F%B7%E7%9A%84%E7%BC%96%E7%A0%81%E8%A7%84%E5%88%99%E6%98%AF%3A1%E3%80%81G%2B%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%20%28%E5%AF%B9%E4%BA%8E%E6%9C%89%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%9A%84%E5%AD%A6%E7%94%9F%29%EF%BC%9B2%E3%80%81J%2B%E6%8C%89%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%BC%96%E7%A0%81%E8%A7%84%E5%88%99%E7%94%9F%E6%88%90%E7%9A%84%E6%95%B0%E5%AD%97,%286%E4%BD%8D%E5%AD%A6%E6%A0%A1%E6%89%80%E5%9C%A8%E5%9C%B0%E5%8C%BA%E5%88%92%E7%A0%81%2B8%E4%BD%8D%E5%87%BA%E7%94%9F%E6%97%A5%E6%9C%9F%2B3%E4%BD%8D%E9%A1%BA%E5%BA%8F%E7%A0%81%2B1%E4%BD%8D%E6%A0%A1%E9%AA%8C%E7%A0%81%29%20%28%E5%AF%B9%E4%BA%8E%E6%B2%A1%E6%9C%89%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%9A%84%E5%AD%A6%E7%94%9F%29%3B3%E3%80%81%E5%85%A8%E5%9B%BD%E4%B8%B4%E6%97%B6%E5%AD%A6%E7%B1%8D%E5%8F%B7%E7%9A%84%E7%BC%96%E7%A0%81%E8%A7%84%E5%88%99%E6%98%AFL%2B%E6%8C%89%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%BC%96%E7%A0%81%E8%A7%84%E5%88%99%E7%94%9F%E6%88%90%E7%9A%84%E6%95%B0%E5%AD%97%20%286%E4%BD%8D%E5%AD%A6%E6%A0%A1%E6%89%80%E5%9C%A8%E5%9C%B0%E5%8C%BA%E5%88%92%E7%A0%81%2B8%E4%BD%8D%E5%87%BA%E7%94%9F%E6%97%A5%E6%9C%9F%2B4%E4%BD%8D%E9%9A%8F%E6%9C%BA%E7%A0%81%29%EF%BC%8C%E9%83%BD%E6%98%AF19%E4%BD%8D%E3%80%82
+            /*
+学籍辅号
+
+学籍辅号作为学籍号的辅助号码，由各省市自己定制。小学、初中、高中一年级新生入学注册后，由学校为学生编列全省使用的学籍辅号，并纳入全国学籍系统统一管理。
+
+学籍共18位，编码规则为：
+
+第一位：学段代码，小学X，初中C，高中G；
+
+第二、三位：省辖市代码后两位；
+
+第四、五位：县（市、区)代码后两位；
+
+第六位：学校类型代码；
+
+第七位：学校性质代码；
+
+第八、九、十位：学校代码后三位；
+
+第十一、十二、十三、十四位：入学年份；
+
+第十五、十六、十七、十八位：学生编号，流水号。
+            * */
+            // 2021/9/8
+            if (strText.Length == 18)
+            {
+                // 18 位纯数字
+                if (StringUtil.IsPureNumber(strText))
+                    return true;
+                // 17 位数字加最后一个字母
+                char tail = strText[strText.Length - 1];
+                string prev = strText.Substring(0, strText.Length - 1);
+                if (char.IsLetter(tail) && StringUtil.IsPureNumber(prev))
+                    return true;
+
+                char ch = strText[0];
+                if (
+                    ch == 'X' || ch == 'C' || ch == 'G'
+                    )
+                {
+                    string strMiddle = strText.Substring(1, 15);    // 中间 15 位
+                    if (IsPureNumber(strMiddle) == false)
+                        return false;
+                    // 最后两位可能是数字或者大写字母
+                    if (char.IsLetterOrDigit(strText[17]) == false
+                        || char.IsLower(strText[17]) == true
+                        || char.IsLetterOrDigit(strText[16]) == false
+                        || char.IsLower(strText[16]) == true)
+                        return false;
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            return false;
         }
 
         public static int CompareVersion(string strVersion1, string strVersion2)
@@ -695,7 +789,7 @@ out strError);
             }
         }
 
-        #region 和 Application 有关的功能
+#region 和 Application 有关的功能
 
         public static bool IsDevelopMode()
         {
@@ -748,7 +842,7 @@ out strError);
 
             return args;
         }
-        #endregion
+#endregion
 
         // 在列表中寻找指定前缀的元素
         public static List<string> FindPrefixInList(List<string> list,
@@ -1581,7 +1675,7 @@ string strTimestamp)
             return strResult;
         }
 
-        #region 和索取号有关的功能
+#region 和索取号有关的功能
 
         // 获取引导的{...}内容。注意返回值不包括花括号
         public static string GetLeadingCommand(string strLine)
@@ -1887,7 +1981,7 @@ string strTimestamp)
             return 0;
         }
 
-        #endregion
+#endregion
 
         // 获得有限的行数
         public static string GetSomeLines(string strText,
@@ -2550,7 +2644,7 @@ string strTimestamp)
             return String.Join(",", pathlist);
         }
 
-        #region 处理被字符引导的数字的几个函数
+#region 处理被字符引导的数字的几个函数
 
         // 把一个被字符引导的字符串分成三部分
         public static void SplitLedNumber(string strLedNumber,
@@ -2752,7 +2846,7 @@ string strTimestamp)
         }
 
 
-        #endregion
+#endregion
 
         // 给一个被字符引导的数字增加一个数量。
         // 例如 B019 + 1 变成 B020

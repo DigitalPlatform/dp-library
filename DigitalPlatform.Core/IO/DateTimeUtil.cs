@@ -597,7 +597,7 @@ out string strError)
                 if (String.IsNullOrEmpty(strRfc1123Time) == true)
                     return "";
 
-                return DateTimeUtil.Rfc1123DateTimeStringToLocal(strRfc1123Time, "d");  // "yyyy-MM-dd"
+                return DateTimeUtil.Rfc1123DateTimeStringToLocal(strRfc1123Time, "yyyy-MM-dd");  // "d"
             }
             catch (Exception /*ex*/)    // 2008/10/28
             {
