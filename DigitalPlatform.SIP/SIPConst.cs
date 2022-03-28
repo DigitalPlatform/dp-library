@@ -249,6 +249,27 @@ namespace DigitalPlatform.SIP2
         //holding state	HS	可选	0丢失 1编目 2在馆 ，dp2扩展字段。
         public const string F_HS_HoldingState = "HS";
 
+
+        //===Z===
+
+        //search word，检索词，dp2扩展字段。
+        public const string F_ZW_SearchWord = "ZW";
+
+        //start item，开始序号，dp2扩展字段。
+        //public const string F_BP_StartItem = "BP"; //前面已定义
+
+        //max count，最大数量，dp2扩展字段。
+        public const string F_ZC_MaxCount = "ZC";
+
+        //format，数据格式，dp2扩展字段。
+        public const string F_ZF_format = "ZF";
+
+        //total count，总数量，dp2扩展字段。
+        public const string F_ZT_TotalCount = "ZT";
+
+        //channel value，通道内容，dp2扩展字段。
+        public const string F_ZV_Value = "ZV";
+
         #endregion
 
         // 缓冲区长度
