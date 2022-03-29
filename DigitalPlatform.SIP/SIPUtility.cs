@@ -200,6 +200,16 @@ namespace DigitalPlatform.SIP2
                         message = new ItemStatusUpdateResponse_20();
                         break;
                     }
+                case "41":
+                    {
+                        message = new ChannelInformation_41();
+                        break;
+                    }
+                case "42":
+                    {
+                        message = new ChannelInformationResponse_42();
+                        break;
+                    }
                 default:
                     error = "不支持的命令'" + cmdIdentifiers + "'";
                     return -1;
