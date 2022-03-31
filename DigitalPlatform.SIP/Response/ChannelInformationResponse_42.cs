@@ -24,9 +24,11 @@ namespace DigitalPlatform.SIP2.Response
             //<total count><channel value><screen message><print line>
             //ZT ZV      AF AG
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZT_TotalCount,true));
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZR_ReturnCount, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZV_Value, true));
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage, false, true)); //重复字段
-            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ,true));//重复字段
+
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AF_ScreenMessage,false, true)); 
+            this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AG_PrintLine, false ,true));
 
             // 校验码相关，todo
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_AY_SequenceNumber, false));
@@ -75,6 +77,18 @@ namespace DigitalPlatform.SIP2.Response
             set
             {
                 this.SetVariableFieldValue(SIPConst.F_ZT_TotalCount, value);
+            }
+        }
+
+        public string ZR_ReturnCount_r
+        {
+            get
+            {
+                return this.GetVariableFieldValue(SIPConst.F_ZR_ReturnCount);
+            }
+            set
+            {
+                this.SetVariableFieldValue(SIPConst.F_ZR_ReturnCount, value);
             }
         }
 

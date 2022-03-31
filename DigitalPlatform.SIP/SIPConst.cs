@@ -267,6 +267,9 @@ namespace DigitalPlatform.SIP2
         //total count，总数量，dp2扩展字段。
         public const string F_ZT_TotalCount = "ZT";
 
+        //return count，总数量，dp2扩展字段。
+        public const string F_ZR_ReturnCount = "ZR";
+
         //channel value，通道内容，dp2扩展字段。
         public const string F_ZV_Value = "ZV";
 
