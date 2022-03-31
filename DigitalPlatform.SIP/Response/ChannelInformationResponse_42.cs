@@ -14,15 +14,15 @@ namespace DigitalPlatform.SIP2.Response
             this.CommandIdentifier = "42";
 
             //==前面的定长字段
-            //42 <status><transaction date><total count><channel value><screen message><print line>
-            //1 - char      18 - char     ZT ZV      AF AG
+            //42 <status><transaction date>
+            //1 - char      18 - char 
             this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_Ok, 1));
             this.FixedLengthFields.Add(new FixedLengthField(SIPConst.F_TransactionDate, 18));
 
 
             //==后面变长字段
-            //<total count><channel value><screen message><print line>
-            //ZT ZV      AF AG
+            //<total count><return count><channel value><screen message><print line>
+            //ZT    ZR  ZV      AF AG
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZT_TotalCount,true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZR_ReturnCount, true));
             this.VariableLengthFields.Add(new VariableLengthField(SIPConst.F_ZV_Value, true));
