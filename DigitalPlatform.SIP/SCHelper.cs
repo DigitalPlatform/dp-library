@@ -54,7 +54,11 @@ namespace DigitalPlatform.SIP2
         public bool Connection(string serverUrl, int port, Encoding encoding, out string error)
         {
             error = "";
-            this._clientWrapper = new TcpClientWrapper(encoding);
+
+            // 先调一下close，避免产生多根通道，2022/4/2加
+            this.Close();
+
+            this._clientWrapper = new TcpClientWrapper(encoding);  // 新new的一根通道
             return this._clientWrapper.Connection(serverUrl, port, out error);
         }
 
@@ -64,6 +68,8 @@ namespace DigitalPlatform.SIP2
             if (this._clientWrapper != null)
             {
                 this._clientWrapper.Close();
+
+                this._clientWrapper = null;// 2022/4/2 加
             }
         }
 
