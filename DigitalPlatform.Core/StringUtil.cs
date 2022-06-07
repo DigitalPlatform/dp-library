@@ -2961,6 +2961,11 @@ string strTimestamp)
             if (string.IsNullOrEmpty(strPath) == true)
                 return "";
 
+            /*
+            if (strPath.IndexOf("\\") != -1)
+                throw new ArgumentException($"路径 '{strPath}' 中的斜杠不合法，应该为 '/'");
+            */
+
             string strResult = "";
 
             int nIndex = strPath.IndexOf('/');
