@@ -644,8 +644,11 @@ namespace DigitalPlatform.Script
 
             if (bForce8 && strSource.StartsWith("977") == false)
             {
-                strError = $"'{strISSN}' 不是 ISSN 条码号(注: ISSN 条码号应该以 '977' 开头)";
-                return -1;
+                if (strSource.Length != 8)  // 2022/6/7
+                {
+                    strError = $"'{strISSN}' 不是 ISSN 条码号(注: ISSN 条码号应该以 '977' 开头)";
+                    return -1;
+                }
             }
 
             bool bAdjustLength = false; // 是否调整过输入的strISSN的长度
