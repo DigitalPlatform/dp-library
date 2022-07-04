@@ -772,6 +772,9 @@ namespace DigitalPlatform.Marc
                 field_880s.Add(field);
             }
 
+            // TODO: 原有平行字段保持在原来位置可否?
+            // 如果要摘除以后重新插入，要保证插入到以前 main_field 的后面
+
             foreach (MarcField field in field_880s)
             {
                 field.detach();
