@@ -928,7 +928,7 @@ string strTimestamp)
         {
             XmlDocument dom = new XmlDocument();
 
-            if (strMetaData == "")
+            if (string.IsNullOrEmpty(strMetaData))
                 strMetaData = "<file/>";
 
             dom.LoadXml(strMetaData);
