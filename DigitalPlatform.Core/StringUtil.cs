@@ -255,7 +255,7 @@ long default_value = 0)
                 return -1;
 
             return 0;
-            NORMAL_STRING:
+        NORMAL_STRING:
             return string.Compare(s1, s2);
         }
 
@@ -299,7 +299,7 @@ out strError);
                 return nRet;
 
             return decimal.Compare(item1.Value, item2.Value);
-            NORMAL_STRING:
+        NORMAL_STRING:
             return string.Compare(s1, s2);
         }
 
@@ -808,7 +808,7 @@ out strError);
             }
         }
 
-#region 和 Application 有关的功能
+        #region 和 Application 有关的功能
 
         public static bool IsDevelopMode()
         {
@@ -861,7 +861,7 @@ out strError);
 
             return args;
         }
-#endregion
+        #endregion
 
         // 在列表中寻找指定前缀的元素
         public static List<string> FindPrefixInList(List<string> list,
@@ -1240,12 +1240,12 @@ string strTimestamp)
             strLeft = strText;
             goto END1;
 
-            FOUND:
+        FOUND:
             Debug.Assert(nRet != -1, "");
             strLeft = strText.Substring(0, nRet).Trim();
             strRight = strText.Substring(nRet + strSep.Length).Trim();
 
-            END1:
+        END1:
             List<string> results = new List<string>();
             results.Add(strLeft);
             results.Add(strRight);
@@ -1694,7 +1694,7 @@ string strTimestamp)
             return strResult;
         }
 
-#region 和索取号有关的功能
+        #region 和索取号有关的功能
 
         // 获取引导的{...}内容。注意返回值不包括花括号
         public static string GetLeadingCommand(string strLine)
@@ -2000,7 +2000,7 @@ string strTimestamp)
             return 0;
         }
 
-#endregion
+        #endregion
 
         // 获得有限的行数
         public static string GetSomeLines(string strText,
@@ -2663,7 +2663,7 @@ string strTimestamp)
             return String.Join(",", pathlist);
         }
 
-#region 处理被字符引导的数字的几个函数
+        #region 处理被字符引导的数字的几个函数
 
         // 把一个被字符引导的字符串分成三部分
         public static void SplitLedNumber(string strLedNumber,
@@ -2865,7 +2865,7 @@ string strTimestamp)
         }
 
 
-#endregion
+        #endregion
 
         // 给一个被字符引导的数字增加一个数量。
         // 例如 B019 + 1 变成 B020
@@ -3266,7 +3266,7 @@ string strTimestamp)
                     strResult += ",";
                 strResult += items1[i];
                 continue;
-                FOUND:
+            FOUND:
                 continue;
             }
 
