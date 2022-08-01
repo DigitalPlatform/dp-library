@@ -22,5 +22,17 @@ namespace DigitalPlatform.Xml
             else
                 return nodeText.Value;
         }
+
+        // 2022/8/1
+        public static string GetElementText(this XmlElement nodeRoot,
+    string strXpath,
+    out XmlElement element)
+        {
+            element = nodeRoot.SelectSingleNode(strXpath) as XmlElement;
+            if (element == null)
+                return "";
+
+            return element.InnerText;
+        }
     }
 }
