@@ -127,5 +127,170 @@ namespace DigitalPlatform.Xml
             bValue = false;
             return 0;
         }
+
+        // 包装版本
+        public static string GetStringParam(this XmlElement node,
+            string strParamName,
+            string strDefaultValue)
+        {
+            string strValue = strDefaultValue;
+            string strError = "";
+            GetStringParam(node,
+                strParamName,
+                strDefaultValue,
+                out strValue,
+                out strError);
+            return strValue;
+        }
+
+        // 2016/10/13
+        // 包装后的版本。不用事先获得元素的 Node
+        public static string GetStringParam(
+            this XmlElement root,
+            string strElementPath,
+            string strParamName,
+            string strDefaultValue)
+        {
+            XmlElement node = root.SelectSingleNode(strElementPath) as XmlElement;
+            if (node == null)
+                return strDefaultValue;
+            return GetStringParam(node,
+                strParamName,
+                strDefaultValue);
+        }
+
+        // 获得字符串的属性参数值
+        // 注：属性节点不具备的时候，返回 strDefaultValue。否则，就要返回属性值，哪怕属性值为 ""
+        // return:
+        //      -1  出错。但是nValue中已经有了nDefaultValue值，可以不加警告而直接使用
+        //      0   正常获得明确定义的参数值
+        //      1   参数没有定义，因此代替以缺省参数值返回
+        public static int GetStringParam(this XmlElement node,
+            string strParamName,
+            string strDefaultValue,
+            out string strValue,
+            out string strError)
+        {
+            strError = "";
+
+            XmlAttribute attr = node.GetAttributeNode(strParamName);
+            if (attr == null)
+            {
+                strValue = strDefaultValue;
+                return 1;
+            }
+            strValue = attr.Value;
+            if (string.IsNullOrEmpty(strValue) == false)
+                strValue = strValue.Trim();
+
+            return 0;
+        }
+
+        // 获得整数型的属性参数值
+        // return:
+        //      -1  出错。但是nValue中已经有了nDefaultValue值，可以不加警告而直接使用
+        //      0   正常获得明确定义的参数值
+        //      1   参数没有定义，因此代替以缺省参数值返回
+        public static int GetIntegerParam(this XmlElement node,
+            string strParamName,
+            int nDefaultValue,
+            out int nValue,
+            out string strError)
+        {
+            strError = "";
+            nValue = nDefaultValue;
+
+            string strValue = node.GetAttribute(strParamName);
+
+
+            if (String.IsNullOrEmpty(strValue) == true)
+            {
+                nValue = nDefaultValue;
+                return 1;
+            }
+
+            try
+            {
+                nValue = Convert.ToInt32(strValue);
+            }
+            catch (Exception ex)
+            {
+                strError = "属性 " + strParamName + " 的值应当为数值型。出错信息: " + ex.Message;
+                return -1;
+            }
+
+            return 0;
+        }
+
+        // 获得整数型的属性参数值
+        // return:
+        //      -1  出错。但是nValue中已经有了nDefaultValue值，可以不加警告而直接使用
+        //      0   正常获得明确定义的参数值
+        //      1   参数没有定义，因此代替以缺省参数值返回
+        public static int GetIntegerParam(this XmlElement node,
+            string strParamName,
+            long nDefaultValue,
+            out long nValue,
+            out string strError)
+        {
+            strError = "";
+            nValue = nDefaultValue;
+
+            string strValue = node.GetAttribute(strParamName);
+
+            if (String.IsNullOrEmpty(strValue) == true)
+            {
+                nValue = nDefaultValue;
+                return 1;
+            }
+
+            try
+            {
+                nValue = Convert.ToInt64(strValue);
+            }
+            catch (Exception ex)
+            {
+                strError = "属性 " + strParamName + " 的值应当为数值型。出错信息: " + ex.Message;
+                return -1;
+            }
+
+            return 0;
+        }
+
+        // 获得浮点数型的属性参数值
+        // return:
+        //      -1  出错。但是nValue中已经有了nDefaultValue值，可以不加警告而直接使用
+        //      0   正常获得明确定义的参数值
+        //      1   参数没有定义，因此代替以缺省参数值返回
+        public static int GetDoubleParam(this XmlElement node,
+            string strParamName,
+            double nDefaultValue,
+            out double nValue,
+            out string strError)
+        {
+            strError = "";
+            nValue = nDefaultValue;
+
+            string strValue = node.GetAttribute(strParamName);
+
+            if (String.IsNullOrEmpty(strValue) == true)
+            {
+                nValue = nDefaultValue;
+                return 1;
+            }
+
+            try
+            {
+                nValue = Convert.ToDouble(strValue);
+            }
+            catch (Exception ex)
+            {
+                strError = "属性 " + strParamName + " 的值应当为(浮点)数值型。出错信息: " + ex.Message;
+                return -1;
+            }
+
+            return 0;
+        }
+
     }
 }
