@@ -96,6 +96,20 @@ namespace UnitTestCompactLog
             Assert.AreEqual("0000010", result[1]);
         }
 
+        [TestMethod]
+        public void Test_compactNumber_08()
+        {
+            List<string> source = new List<string>() {
+                "0000001",
+                "0000003",
+                "0000005" };
+            var result = StringUtil.CompactNumbers(source);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("0000001", result[0]);
+            Assert.AreEqual("0000003", result[1]);
+            Assert.AreEqual("0000005", result[2]);
+        }
+
         // 
 
         [TestMethod]
