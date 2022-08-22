@@ -2287,7 +2287,8 @@ string strTimestamp)
                         }
                         else
                         {
-                            results.Add(strCurrent);
+                            // results.Add(strCurrent);
+                            results.Add(strPrev);
                         }
                     }
                 }
@@ -2301,6 +2302,7 @@ string strTimestamp)
                 results.Add(strStart + "-" + strTail.Substring(nLengh));
                 strStart = "";
                 strTail = "";
+                strPrev = "";   // 2022/8/23
             }
 
             // 2012/4/1
@@ -2308,7 +2310,6 @@ string strTimestamp)
             {
                 results.Add(strPrev);
             }
-
             return results;
         }
 
