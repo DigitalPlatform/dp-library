@@ -139,7 +139,7 @@ namespace DigitalPlatform.SIP2
         // 2022/9/13 针对不能识别的字段，内部统一提示的一个接口
         private string GetWarning(string field)
         {
-            return this.CommandIdentifier + "消息中，出现了不能识别的 " + field + " 字段";
+            return "'"+this.CommandIdentifier + "'消息中，出现了不能识别的'" + field + " 字段。";
         }
 
         protected List<VariableLengthField> GetVariableFieldList(string id)
