@@ -47,7 +47,7 @@ namespace DigitalPlatform.SIP2
         {
             FixedLengthField field = this.GetFixedField(name);
             if (field == null)
-                throw new Exception("未定义定长字段" + name);
+                throw new Exception("未定义定长字段" + name);   //???要不要统一改为getWarning，暂时先不改。2022/9/13
 
             return field.Value;
         }
@@ -57,7 +57,7 @@ namespace DigitalPlatform.SIP2
         {
             FixedLengthField field = this.GetFixedField(name);
             if (field == null)
-                throw new Exception("未定义定长字段" + name);
+                throw new Exception("未定义定长字段" + name); //???要不要统一改为getWarning，暂时先不改。2022/9/13
 
             field.Value = value;
         }
@@ -85,7 +85,6 @@ namespace DigitalPlatform.SIP2
 
         protected string GetVariableFieldValue(string id)
         {
-
             VariableLengthField field = this.GetVariableField(id);
             if (field == null)
             {
@@ -93,11 +92,13 @@ namespace DigitalPlatform.SIP2
                 if (id == "AY" || id == "AZ")
                     return "";
 
-                throw new Exception("未定义变长字段" + id);
+                throw new Exception(this.GetWarning(id));//未定义变长字段" + id); 2022/9/13修改
             }
 
             return field.Value;
         }
+
+
 
         // 设置某个定长字段的值
         protected void SetVariableFieldValue(string id, string value)
@@ -108,9 +109,9 @@ namespace DigitalPlatform.SIP2
             {
                 // 20170811 jane todo
                 if (id == "AY" || id == "AZ")
-                    return; 
+                    return;
 
-                throw new Exception("未定义变长字段" + id);
+                throw new Exception(GetWarning(id));//"未定义变长字段" + id);  2022/9/13
             }
 
             // 2020/8/13 如果是重复的字段，先检查字段是否已经赋值，没赋值过则赋值，
@@ -133,6 +134,12 @@ namespace DigitalPlatform.SIP2
                     //this.VariableLengthFields.Add(f);
                 }
             }
+        }
+
+        // 2022/9/13 针对不能识别的字段，内部统一提示的一个接口
+        private string GetWarning(string field)
+        {
+            return this.CommandIdentifier + "消息中，出现了不能识别的 " + field + " 字段";
         }
 
         protected List<VariableLengthField> GetVariableFieldList(string id)
