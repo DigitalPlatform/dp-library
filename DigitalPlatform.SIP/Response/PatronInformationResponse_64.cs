@@ -157,7 +157,7 @@ namespace DigitalPlatform.SIP2.Response
             set
             {
                 if (value.Length != 4)
-                    throw new Exception("overdueI items count参数长度须为4位。");
+                    throw new Exception("overdue items count参数长度须为4位。");
 
                 this.SetFixedFieldValue(SIPConst.F_OverdueItemsCount, value);
             }
