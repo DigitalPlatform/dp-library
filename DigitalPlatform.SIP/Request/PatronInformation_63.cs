@@ -87,7 +87,7 @@ namespace DigitalPlatform.SIP2.Request
             set
             {
                 if (value.Length != 10)
-                    throw new Exception("summary参数长度须为18位。");
+                    throw new Exception("summary参数长度须为10位。");
 
                 this.SetFixedFieldValue(SIPConst.F_Summary, value);
             }
