@@ -1,8 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using DigitalPlatform.Core;
-using System;
 
 namespace UnitTestCompactLog
 {

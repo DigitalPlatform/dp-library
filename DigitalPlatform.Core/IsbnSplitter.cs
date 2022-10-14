@@ -126,9 +126,9 @@ namespace DigitalPlatform.Script
             }
 
             strError = "ISBN第一部分字符数不能超过5";
-            WRONG:
+        WRONG:
             return -1;
-            CORRECT:
+        CORRECT:
             return 0;
         }
 
@@ -138,7 +138,7 @@ namespace DigitalPlatform.Script
         {
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
-            strSource = strSource.Replace("-", "").Replace(" ","").Trim();
+            strSource = strSource.Replace("-", "").Replace(" ", "").Trim();
             if (string.IsNullOrEmpty(strSource) == true)
                 return false;
 
@@ -529,7 +529,7 @@ namespace DigitalPlatform.Script
             strError = "第二部分格式错误 nFirstLen=[" + Convert.ToString(strFirstPart.Length) + "]";
             return -1;
 
-            FINISH:
+        FINISH:
             strTarget = strSource;
 
             strTarget = strTarget.Insert(strFirstPart.Length, "-");
@@ -595,7 +595,7 @@ namespace DigitalPlatform.Script
         /// 如果提供的ISBN字符串本来就有978前缀，那么结果仍将保留前缀。如果本来就没有，结果里面也没有。
         /// </summary>
         /// <param name="strISSN">ISSN 字符串</param>
-        /// <param name="strStyle">处理风格。force8/force13/auto/remainverifychar/strict</param>
+        /// <param name="strStyle">处理风格。force8/force13/auto/strict</param>
         /// <param name="strTarget">返回处理结果</param>
         /// <param name="strError">返回出错信息</param>
         /// <returns>-1:出错; 0:未修改校验位; 1:修改了校验位</returns>
@@ -622,7 +622,7 @@ namespace DigitalPlatform.Script
             bool bForce13 = StringUtil.IsInList("force13", strStyle);
             bool bAuto = StringUtil.IsInList("auto", strStyle);
             bool bRemainVerifyChar = StringUtil.IsInList("remainverifychar", strStyle); // 是否不要重新计算校验位
-            bool bStrict = StringUtil.IsInList("strict", strStyle); // 是否严格要求strISBN输入参数为10或13位
+            bool bStrict = StringUtil.IsInList("strict", strStyle); // 是否严格要求strISSN输入参数为10或13位
 
             int nCount = 0;
             if (bForce8 == true)
@@ -638,7 +638,34 @@ namespace DigitalPlatform.Script
                 return -1;
             }
 
+            if (bForce8)
+            {
+                strSource = GetPureIssn8(strSource);
+                if (strSource.Length == 8)
+                {
+                    /*
+                    // 已经处理到位了
+                    strTarget = strSource;
+                    return 0;
+                    */
+                }
+                else
+                {
+                    if (strSource.StartsWith("977") == false)
+                    {
+                        strError = $"'{strISSN}' 既不是 8 字符 ISSN 条码号，也不是 '977' 开头";
+                        return -1;
+                    }
 
+                    // 977 开头的，还会继续向后处理
+                }
+            }
+            else
+            {
+                strSource = strSource.Replace("-", "").Replace(" ", "");
+            }
+
+            /*
             strSource = strSource.Replace("-", "");
             strSource = strSource.Replace(" ", "");
 
@@ -646,10 +673,13 @@ namespace DigitalPlatform.Script
             {
                 if (strSource.Length != 8)  // 2022/6/7
                 {
+                    // TODO: 检查 strSource 里面是否还有非数字的字符。如果有，则可能是其它形态的横杠
                     strError = $"'{strISSN}' 不是 ISSN 条码号(注: ISSN 条码号应该以 '977' 开头)";
                     return -1;
                 }
             }
+            */
+
 
             bool bAdjustLength = false; // 是否调整过输入的strISSN的长度
 
@@ -746,7 +776,9 @@ namespace DigitalPlatform.Script
 
             if (bHasRemovePrefix977 == true
                 && bForce8 == true)
+            {
                 return 0;   // 移走977后，校验位肯定要发生变化。因此不通知这种变化
+            }
 
             if (bAdjustLength == false
                 && bForce13 == true
@@ -757,6 +789,19 @@ namespace DigitalPlatform.Script
                 return 1;
 
             return 0;
+        }
+
+        // 移走 ISSN 8 字符格式要求以外的字符，也就是所有非数字字符和空格
+        static string GetPureIssn8(string text)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char ch in text)
+            {
+                if (ch >= '0' && ch <= '9')
+                    result.Append(ch);
+            }
+
+            return result.ToString();
         }
 
 
