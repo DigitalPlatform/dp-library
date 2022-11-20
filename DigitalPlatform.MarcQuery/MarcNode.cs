@@ -732,6 +732,7 @@ namespace DigitalPlatform.Marc
     /// <remarks>
     /// 继承 MarcNodeList 类而来，完善了 add() 方法，能自动把每个元素的 Parent 成员设置好
     /// </remarks>
+    [Serializable]
     public class ChildNodeList : MarcNodeList
     {
         internal MarcNode owner = null;
