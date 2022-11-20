@@ -19,7 +19,8 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MarcQuery 函数库的一些全局属性和方法
     /// </summary>
-    public class MarcQuery
+    [Serializable]
+    public static class MarcQuery
     {
         /// <summary>
         /// MARC 子字段符号

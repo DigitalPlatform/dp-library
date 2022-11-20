@@ -9,6 +9,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 子字段节点
     /// </summary>
+    [Serializable]
     public class MarcSubfield : MarcNode
     {
         /// <summary>

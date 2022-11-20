@@ -12,6 +12,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MarcNode 集合
     /// </summary>
+    [Serializable]
     public class MarcNodeList : IEnumerable
     {
         List<MarcNode> m_list = new List<MarcNode>();

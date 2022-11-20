@@ -12,6 +12,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// 用于从 ISO2709 文件读入 MARC 记录的枚举器
     /// </summary>
+    [Serializable]
     public class MarcLoader : IEnumerable
     {
         // 默认为 GB2312 编码方式

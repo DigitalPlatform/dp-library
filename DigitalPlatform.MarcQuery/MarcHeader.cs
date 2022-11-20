@@ -7,6 +7,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 记录的头标区
     /// </summary>
+    [Serializable]
     public class MarcHeader
     {
         string m_strContent = "";

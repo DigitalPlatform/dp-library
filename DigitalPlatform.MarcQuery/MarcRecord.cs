@@ -9,6 +9,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 记录节点
     /// </summary>
+    [Serializable]
     public class MarcRecord : MarcNode
     {
         // 存储头标区 24 字符

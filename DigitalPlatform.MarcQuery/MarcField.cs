@@ -8,6 +8,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 外围字段节点
     /// </summary>
+    [Serializable]
     public class MarcOuterField : MarcField
     {
         #region 构造函数
@@ -269,6 +270,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 内嵌字段节点
     /// </summary>
+    [Serializable]
     public class MarcInnerField : MarcField
     {
         #region 构造函数
@@ -464,6 +466,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 字段节点
     /// </summary>
+    [Serializable]
     public class MarcField : MarcNode
     {
         // 缺省的字段名

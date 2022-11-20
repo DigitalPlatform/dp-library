@@ -11,6 +11,7 @@ namespace DigitalPlatform.Marc
     /// <summary>
     /// MARC 基本节点
     /// </summary>
+    [Serializable]
     public class MarcNode
     {
         /// <summary>
