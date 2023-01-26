@@ -78,8 +78,8 @@ namespace DigitalPlatform.Core
     /// </summary>
     public class RangeList : List<RangeItem>
     {
-        public string delimeters = ",";	// 分隔符。可以列出多个
-        public string contentRange = "";	// 保存范围字符串
+        public string _delimeters = ",";	// 分隔符。可以列出多个
+        public string _contentRange = "";	// 保存范围字符串
 
         // 构造函数
         public RangeList(string strContentRange)
@@ -96,7 +96,7 @@ namespace DigitalPlatform.Core
         public RangeList(string strContentRange,
             string delemParam)
         {
-            delimeters = delemParam;
+            _delimeters = delemParam;
 
             BuildItems(strContentRange);
         }
@@ -106,31 +106,48 @@ namespace DigitalPlatform.Core
         {
             long lStart = 0;
             long lLength = 0;
-            string[] split = null;
 
-            char[] delimChars = delimeters.ToCharArray();
+            char[] delimChars = _delimeters.ToCharArray();
 
-            split = strContentRange.Split(delimChars);
+            var list = strContentRange.Split(delimChars);
 
-            for (int i = 0; i < split.Length; i++)
+            // for (int i = 0; i < list.Length; i++)
+            foreach (var s in list)
             {
-                if (split[i] == "")
+                if (string.IsNullOrEmpty(s))
                     continue;
+
+                // 2023/1/26
+                // 冒号
+                int nRet = s.IndexOf(":");
+                if (nRet != -1)
+                {
+                    string left = s.Substring(0, nRet).Trim();
+                    string length = s.Substring(nRet + 1).Trim();
+
+                    if (Int64.TryParse(left, out lStart) == false)
+                        throw new Exception($"用字符串 '{strContentRange}' 构造RangeList时出错：数字 '{left}' 格式不正确");
+                    if (Int64.TryParse(length, out lLength) == false)
+                        throw new Exception($"用字符串 '{strContentRange}' 构造RangeList时出错：数字 '{length}' 格式不正确");
+                    // TODO: 检查，lStart 不应该小于零；lLength 不应该小于零
+                    goto CONTINUE;
+                }
+
                 // 根据-拆分
-                int nRet = split[i].IndexOf("-");
+                nRet = s.IndexOf("-");
                 if (nRet == -1)
                 {
-                    lStart = 0; //  Convert.ToInt64(split[i]);
+                    lStart = 0; //  Convert.ToInt64(list[i]);
 
-                    if (Int64.TryParse(split[i], out lStart) == false)
-                        throw new Exception("用字符串 '" + strContentRange + "' 构造RangeList时出错：数字 '" + split[i].ToString() + "' 格式不正确");
+                    if (Int64.TryParse(s, out lStart) == false)
+                        throw new Exception($"用字符串 '{strContentRange}' 构造RangeList时出错：数字 '{s}' 格式不正确");
 
                     lLength = 1;
                 }
                 else
                 {
-                    string left = split[i].Substring(0, nRet);
-                    string right = split[i].Substring(nRet + 1);
+                    string left = s.Substring(0, nRet);
+                    string right = s.Substring(nRet + 1);
                     left = left.Trim();
                     right = right.Trim();
 
@@ -185,14 +202,14 @@ namespace DigitalPlatform.Core
                     }
 
                 }
-                CONTINUE:
+            CONTINUE:
                 RangeItem item = new RangeItem();
                 item.lStart = lStart;
                 item.lLength = lLength;
                 this.Add(item);
             }
 
-            contentRange = strContentRange;	// 保存起来
+            _contentRange = strContentRange;	// 保存起来
         }
 
         // 拼接为表示范围的字符串
