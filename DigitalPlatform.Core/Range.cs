@@ -60,14 +60,32 @@ namespace DigitalPlatform.Core
             lLength = item.lLength;
         }
 
+        // 2023/1/27
+        public override string ToString()
+        {
+            return GetContentRangeString();
+        }
+
         // 拼接为表示范围的字符串
         public string GetContentRangeString()
         {
+            // 2023/1/27 两种特殊情形
+            if (lStart == -1)
+                return $"-{lLength}";
+            if (lLength == -1)
+                return $"{lStart}-";
+
             Debug.Assert(this.lStart >= 0, "");
-            Debug.Assert(this.lStart + this.lLength - 1 >= 0, "");
+            Debug.Assert(this.lLength >= 0);
+            // Debug.Assert(this.lStart + this.lLength - 1 >= 0, "");
+
 
             if (lLength == 1)
                 return Convert.ToString(lStart);
+
+            // 2023/1/27
+            if (lLength == 0)
+                return $"{lStart}:{lLength}";
 
             return Convert.ToString(lStart) + "-" + Convert.ToString(lStart + lLength - 1);
         }
@@ -210,6 +228,12 @@ namespace DigitalPlatform.Core
             }
 
             _contentRange = strContentRange;	// 保存起来
+        }
+
+        // 2023/1/27
+        public override string ToString()
+        {
+            return GetContentRangeString();
         }
 
         // 拼接为表示范围的字符串
