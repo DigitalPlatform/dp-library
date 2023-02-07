@@ -334,12 +334,14 @@ namespace DigitalPlatform.Core
 
         // 合并重叠的事项
         // 要求事先排序。否则不能保证运算正确性。
-        public int Merge()
+        // parameters:
+        //      remove_empty_item   是否要移走长度为 0 事项?
+        public int Merge(bool remove_empty_item = true)
         {
             for (int i = 0; i < this.Count; i++)
             {
                 RangeItem item1 = (RangeItem)this[i];
-                if (item1.lLength == 0)
+                if (item1.lLength == 0 && remove_empty_item)
                 {
                     this.RemoveAt(i);
                     i--;
