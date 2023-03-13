@@ -24,6 +24,10 @@ namespace DigitalPlatform.Marc
         /// </summary>
         public NodeType NodeType = NodeType.None;
 
+        // 2023/3/13
+        // 可存储额外的对象
+        public object Param { get; set; }
+
         /// <summary>
         /// 子节点集合
         /// </summary>
@@ -309,7 +313,7 @@ namespace DigitalPlatform.Marc
             if (index == -1)
             {
                 throw new Exception("parent的ChildNodes中居然没有找到自己");
-                return this;
+                // return this;
             }
 
             parent.ChildNodes.removeAt(index);
@@ -511,7 +515,7 @@ namespace DigitalPlatform.Marc
                 {
                     // if (bSkipNoneElement == false)
                     throw new Exception("xpath '" + strXPath + "' 命中了非元素类型的节点，这是不允许的");
-                    continue;
+                    // continue;
                 }
                 results.add(item.MarcNode);
             }

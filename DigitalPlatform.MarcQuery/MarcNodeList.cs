@@ -1188,7 +1188,7 @@ namespace DigitalPlatform.Marc
                     if (item.Type != NaviItemType.Element)
                     {
                         throw new Exception("xpath '" + strXPath + "' 命中了非元素类型的节点，这是不允许的");
-                        continue;
+                        // continue;
                     }
                     if (results.indexOf(item.MarcNode) == -1)   // 不重复的才加入
                         results.add(item.MarcNode);
