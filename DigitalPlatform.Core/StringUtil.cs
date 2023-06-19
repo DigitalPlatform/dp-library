@@ -454,13 +454,13 @@ out strError);
                 char left = pairs[i * 2];
                 if (strValue[0] == left)
                 {
-                    strValue = strValue.Substring(1);
-                    if (strValue.Length == 0)
+                    var rest = strValue.Substring(1);
+                    if (rest.Length == 0)
                         return "";
 
                     char right = pairs[(i * 2) + 1];
-                    if (strValue[strValue.Length - 1] == right)
-                        return strValue.Substring(0, strValue.Length - 1);
+                    if (rest[rest.Length - 1] == right)
+                        return rest.Substring(0, rest.Length - 1);
                 }
             }
 

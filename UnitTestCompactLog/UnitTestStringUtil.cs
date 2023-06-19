@@ -189,5 +189,42 @@ namespace UnitTestCompactLog
             Assert.AreEqual("B0000001-2", result[0]);
             Assert.AreEqual("B0000010", result[1]);
         }
+
+        [TestMethod]
+        public void Test_unquote_01()
+        {
+            string source = "全2册";
+            string target = "2";
+            var ret = StringUtil.Unquote(source, "全册共册全卷共卷");
+            Assert.AreEqual(target, ret);
+        }
+
+        [TestMethod]
+        public void Test_unquote_02()
+        {
+            string source = "共2册";
+            string target = "2";
+            var ret = StringUtil.Unquote(source, "全册共册全卷共卷");
+            Assert.AreEqual(target, ret);
+        }
+
+
+        [TestMethod]
+        public void Test_unquote_03()
+        {
+            string source = "全2卷";
+            string target = "2";
+            var ret = StringUtil.Unquote(source, "全册共册全卷共卷");
+            Assert.AreEqual(target, ret);
+        }
+
+        [TestMethod]
+        public void Test_unquote_04()
+        {
+            string source = "共2卷";
+            string target = "2";
+            var ret = StringUtil.Unquote(source, "全册共册全卷共卷");
+            Assert.AreEqual(target, ret);
+        }
     }
 }
