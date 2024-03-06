@@ -366,7 +366,10 @@ namespace DigitalPlatform.Marc
             int IComparer<MarcNode>.Compare(MarcNode x, MarcNode y)
             {
                 // 如果名字字符串中出现了字符 '-'，需要特殊的比较方式
-                if (x.Name.IndexOf("-") != -1 || y.Name.IndexOf("-") != -1)
+                if (x.Name.IndexOf("-") != -1
+                    || y.Name.IndexOf("-") != -1
+                    || x.Name == "FMT"
+                    || y.Name == "FMT")
                     return CompareFieldName(x.Name, y.Name);
                 return string.Compare(x.Name, y.Name);
             }
@@ -375,6 +378,10 @@ namespace DigitalPlatform.Marc
             // "-01"理解为比"001"更小
             public static int CompareFieldName(string s1, string s2)
             {
+                if (s1 == "FMT")
+                    s1 = "///";
+                if (s2 == "FMT")
+                    s2 = "///";
                 s1 = s1.Replace("-", "/");
                 s2 = s2.Replace("-", "/");
                 return string.CompareOrdinal(s1, s2);

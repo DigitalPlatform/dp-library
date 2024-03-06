@@ -1,9 +1,11 @@
-﻿using DigitalPlatform.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using DigitalPlatform.Text;
 
 namespace UnitTestCompactLog
 {
