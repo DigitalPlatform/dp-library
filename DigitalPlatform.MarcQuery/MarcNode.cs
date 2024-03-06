@@ -197,6 +197,7 @@ namespace DigitalPlatform.Marc
                 )
 
                 || String.Compare(strFieldName, "-01") == 0
+                || strFieldName == "FMT"    // 2024/3/6
                 )
                 return true;
 
