@@ -175,8 +175,10 @@ long default_value = 0)
             if (string.IsNullOrEmpty(strList) == true)
                 return false;
             string[] list = strList.Split(new char[] { delimeter }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in list)
+            foreach (string s0 in list)
             {
+                var s = s0.Trim();  // 2025/1/21
+
                 if (strOne == s)
                     return true;
             }
@@ -201,8 +203,10 @@ long default_value = 0)
                 return null;
             string environment = "";    // 当前环境值
             string[] list = strList.Split(new char[] { segChar }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in list)
+            foreach (string s0 in list)
             {
+                var s = s0.Trim();  // 2025/1/21
+
                 if (s.StartsWith(strDelimiter) == true)
                 {
                     environment = s.Substring(strDelimiter.Length);
@@ -392,8 +396,10 @@ out strError);
                 return false;
 
             string[] list = strList.Split(new char[] { '|' });
-            foreach (string pattern in list)
+            foreach (string pattern0 in list)
             {
+                var pattern = pattern0.Trim();  // 2025/1/21
+
                 if (MatchIpAddress(pattern, strIP) == true)
                     return true;
             }
@@ -504,8 +510,9 @@ out strError);
             }
 
             string[] list = strList.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in list)
+            foreach (string s0 in list)
             {
+                var s = s0.Trim();  // 2025/1/21
                 if (s.StartsWith(strPrefix + strDelimiter) == true)
                     return s.Substring(strPrefix.Length + strDelimiter.Length);
                 if (s == strPrefix)
@@ -526,8 +533,10 @@ out strError);
 
             List<string> results = new List<string>();
             string[] list = strList.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in list)
+            foreach (string s0 in list)
             {
+                var s = s0.Trim();  // 2025/1/21
+
                 if (s.StartsWith(strPrefix + strDelimiter) == true
                     || s == strPrefix)
                 {
