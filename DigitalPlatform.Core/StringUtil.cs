@@ -3721,10 +3721,17 @@ string strTimestamp)
         // 编写者：任延华
         public static bool IsDigital(string strText)
         {
+            if (string.IsNullOrEmpty(strText) == true)
+                return false;
             foreach (char oneChar in strText)
             {
+                // 2024/4/13
+                if (char.IsDigit(oneChar) == false)
+                    return false;
+                /*
                 if (StringUtil.IsDigital(oneChar) == false)
                     return false;
+                */
             }
             return true;
         }
@@ -4136,6 +4143,7 @@ string strTimestamp)
             return true;
         }
 
+#if REMOVED
         public static bool IsDigital(char ch)
         {
             char[] chs = new char[10];
@@ -4157,9 +4165,10 @@ string strTimestamp)
             }
 
             return false;
-
         }
+#endif
 
+#if REMOVED
         // 过滤字符串的非数字字符,变成数字型字符串,包含"."
         // parameter:
         //		strText: 传进的字符串
@@ -4175,7 +4184,7 @@ string strTimestamp)
             {
                 char oneChar = strInputText[i];
 
-                if ((StringUtil.IsDigital(oneChar) == true))
+                if (char.IsDigit(oneChar) == true)
                     aDigitalList.Add(oneChar);
                 else if (oneChar == '.')
                     aDigitalList.Add(oneChar);
@@ -4191,6 +4200,27 @@ string strTimestamp)
             if (strResult == "")
                 strResult = "-1";
             return strResult;
+        }
+#endif
+        // 过滤字符串的非数字字符,变成数字型字符串,包含"."
+        // 注: "1a2" 这样的会返回 "12"
+        // parameter:
+        //		strText: 传进的字符串
+        // return:
+        //		数字型字符串
+        public static string GetStringNumber(string strInputText)
+        {
+            if (string.IsNullOrEmpty(strInputText) == true)
+                return "-1";
+            StringBuilder result = new StringBuilder();
+            foreach (char ch in strInputText)
+            {
+                if (char.IsDigit(ch) || ch == '.')
+                    result.Append(ch);
+            }
+            if (result.Length == 0)
+                return "-1";
+            return result.ToString();
         }
 
         // 把一数字型字符串变成整数型字符串，并根据精度进行扩展
