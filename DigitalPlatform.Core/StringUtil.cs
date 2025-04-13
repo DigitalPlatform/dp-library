@@ -3717,6 +3717,7 @@ string strTimestamp)
             return RegexCompare(strPattern, strText);
         }
 
+        // 2024/4/13 重构
         // 检索一个字符串是否是数字格式,不包含'.'
         // 编写者：任延华
         public static bool IsDigital(string strText)
