@@ -12,9 +12,9 @@ namespace DigitalPlatform.Net
         // return:
         //      false   失败
         //      bool    成功
-        public static bool Ping(string host, out string strInfomation)
+        public static bool Ping(string host, out string strInformation)
         {
-            strInfomation = "";
+            strInformation = "";
 
             Ping pingSender = new Ping();
             PingOptions options = new PingOptions();
@@ -43,7 +43,7 @@ namespace DigitalPlatform.Net
             else
                 text.Append(reply.Status.ToString());
 
-            strInfomation = text.ToString();
+            strInformation = text.ToString();
             return reply.Status == IPStatus.Success;
         }
     }
