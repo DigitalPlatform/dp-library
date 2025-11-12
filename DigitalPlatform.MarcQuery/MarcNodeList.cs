@@ -1146,7 +1146,10 @@ namespace DigitalPlatform.Marc
         /// <returns>当前集合</returns>
         public MarcNodeList detach()
         {
-            foreach (MarcNode node in this)
+            // 避免枚举器被改变
+            MarcNodeList list = new MarcNodeList();
+            list.add(this);
+            foreach (MarcNode node in list)
             {
                 node.detach();
             }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Xml.XPath;
-using System.Text.RegularExpressions;
 
 namespace DigitalPlatform.Marc
 {
@@ -28,10 +27,51 @@ namespace DigitalPlatform.Marc
         // 可存储额外的对象
         public object Param { get; set; }
 
+
+        ChildNodeList _childNodes = new ChildNodeList();
+
+        // 2025/11/12 改为 getter setter，妥善处理 setter 中 .owner 的设置
         /// <summary>
         /// 子节点集合
         /// </summary>
-        public ChildNodeList ChildNodes = new ChildNodeList();
+        public ChildNodeList ChildNodes
+        {
+            get
+            {
+                return _childNodes;
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    value.detach();
+                    _childNodes = value;
+                    _childNodes.SetOwner(this); // 和当前对象建立关系
+                }
+                else
+                    _childNodes = new ChildNodeList();  // 这里不采用 .clear 的原因是设置 null 以后，原对象指针可能还有用
+            }
+        }
+        // public ChildNodeList ChildNodes = new ChildNodeList();
+
+        // 校验下级节点的 MarcNode.Parent 是否正确指向父对象(this)
+        public List<string> VerifyOwner()
+        {
+            List<string> errors = new List<string>();
+            foreach (MarcNode node in this.ChildNodes)
+            {
+                if (node.Parent != this)
+                {
+                    errors.Add($"节点 '{node.Text}' 的 .Parent 成员和父级不匹配");
+                }
+
+                var temp = node.VerifyOwner();
+                errors.AddRange(temp);
+            }
+
+            return errors;
+        }
 
         #region 构造函数
 
@@ -753,7 +793,7 @@ namespace DigitalPlatform.Marc
             node.detach();
             base.add(node);
 
-            Debug.Assert(owner != null, "");
+            // Debug.Assert(owner != null, "");
             node.Parent = owner;
         }
 
@@ -810,6 +850,33 @@ namespace DigitalPlatform.Marc
             }
             base.clear();
         }
+
+        // 2025/11/12
+        // 覆盖掉 MarcNodeList 这个基类的 detach() 函数
+        public new ChildNodeList detach()
+        {
+            if (owner != null)
+                this.owner.ChildNodes = null;
+            this.SetOwner(null);    // 让所有下级对象都处于无主状态
+            return this;
+        }
+
+        // 2025/11/12
+        public void SetOwner(MarcNode owner)
+        {
+            this.owner = owner;
+            foreach(MarcNode node in this)
+            {
+                if (node.Parent != owner)
+                {
+                    node.Parent = owner;
+                    // 如果发生了改变，推断下级也可能会不一致，继续递归
+                    node.ChildNodes.SetOwner(node);
+                }
+            }
+        }
+
+
     }
 
     /// <summary>
