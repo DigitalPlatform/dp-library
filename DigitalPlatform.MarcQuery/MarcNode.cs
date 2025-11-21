@@ -207,7 +207,7 @@ namespace DigitalPlatform.Marc
         /// <returns>新的节点对象</returns>
         public virtual MarcNode clone()
         {
-            throw new Exception("not implemented");
+            throw new NotImplementedException("not implemented");
         }
 
 
@@ -372,7 +372,7 @@ namespace DigitalPlatform.Marc
             MarcNode parent = this.Parent;
             // 自己是根节点，无法具有兄弟
             if (parent == null)
-                throw new Exception("无法在根节点同级插入新节点");
+                throw new ArgumentException("无法在根节点同级插入新节点");
 
             int index = parent.ChildNodes.indexOf(this);
             if (index == -1)
@@ -382,7 +382,7 @@ namespace DigitalPlatform.Marc
 
             // 进行类型检查，同级只能插入相同类型的元素
             if (this.NodeType != source.NodeType)
-                throw new Exception("无法在节点同级插入不同类型的新节点。this.NodeTYpe=" + this.NodeType.ToString() + ", source.NodeType=" + source.NodeType.ToString());
+                throw new ArgumentException("无法在节点同级插入不同类型的新节点。this.NodeTYpe=" + this.NodeType.ToString() + ", source.NodeType=" + source.NodeType.ToString());
 
             source.detach();
             parent.ChildNodes.insert(index, source);
@@ -411,7 +411,7 @@ namespace DigitalPlatform.Marc
 
             // 进行类型检查，同级只能插入相同类型的元素
             if (this.NodeType != source.NodeType)
-                throw new Exception("无法在节点同级插入不同类型的新节点。this.NodeTYpe=" + this.NodeType.ToString() + ", source.NodeType=" + source.NodeType.ToString());
+                throw new ArgumentException("无法在节点同级插入不同类型的新节点。this.NodeTYpe=" + this.NodeType.ToString() + ", source.NodeType=" + source.NodeType.ToString());
 
             source.detach();
             parent.ChildNodes.insert(index + 1, source);

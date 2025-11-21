@@ -59,7 +59,7 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 3)
-                    throw new Exception("Field的Name必须为3字符");
+                    throw new ArgumentException("Field的Name必须为3字符");
                 this.m_strName = strName;
             }
 
@@ -119,7 +119,7 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 3)
-                    throw new Exception("Field的Name必须为3字符");
+                    throw new ArgumentException("Field的Name必须为3字符");
                 this.m_strName = strName;
             }
 
@@ -195,10 +195,10 @@ namespace DigitalPlatform.Marc
             }
 
             if (string.IsNullOrEmpty(strText) == true)
-                throw new Exception("字段 Text 不能设置为空");
+                throw new ArgumentException("字段 Text 不能设置为空");
 
             if (strText.Length < 3)
-                throw new Exception("字段 Text 不能设置为小于 3 字符");
+                throw new ArgumentException("字段 Text 不能设置为小于 3 字符");
 
             string strFieldName = strText.Substring(0, 3);
             strText = strText.Substring(3); // 剩余部分
@@ -206,7 +206,7 @@ namespace DigitalPlatform.Marc
             this.m_strName = strFieldName;
             if (MarcNode.isControlFieldName(strFieldName) == true)
             {
-                throw new Exception("MARC 外围字段的字段名不能使用控制字段名 '" + strFieldName + "'");
+                throw new ArgumentException("MARC 外围字段的字段名不能使用控制字段名 '" + strFieldName + "'");
             }
             else
             {
@@ -369,9 +369,9 @@ namespace DigitalPlatform.Marc
                 if (this.IsHeader == true)
                 {
                     if (string.IsNullOrEmpty(value) == true)
-                        throw new Exception("头标区内容不能设置为空");
+                        throw new ArgumentException("头标区内容不能设置为空");
                     if (value.Length != 24)
-                        throw new Exception("头标区内容只能设置为24字符");
+                        throw new ArgumentException("头标区内容只能设置为24字符");
 
                     this.Content = value;
                     return;
@@ -387,25 +387,25 @@ namespace DigitalPlatform.Marc
         void setFieldText(string strText)
         {
             if (string.IsNullOrEmpty(strText) == true)
-                throw new Exception("内嵌字段 Text 不能设置为空");
+                throw new ArgumentException("内嵌字段 Text 不能设置为空");
             if (strText[0] == MarcQuery.SUBFLD[0])
             {
                 if (strText.Length < 5)
-                    throw new Exception("内嵌字段 Text 不能设置为小于 5 字符");
+                    throw new ArgumentException("内嵌字段 Text 不能设置为小于 5 字符");
                 if (strText[0] != MarcQuery.SUBFLD[0])
-                    throw new Exception("内嵌字段 Text 第一字符必须是子字段符号");
+                    throw new ArgumentException("内嵌字段 Text 第一字符必须是子字段符号");
                 if (strText[1] != '1')
-                    throw new Exception("内嵌字段 Text 第二字符必须为 '1'");
+                    throw new ArgumentException("内嵌字段 Text 第二字符必须为 '1'");
 
                 // 去掉头部的 $1  字符
                 strText = strText.Substring(2);
                 if (strText.Length < 3)
-                    throw new Exception("字段 Text 剥离前二字符后，不能设置为小于 3 字符");
+                    throw new ArgumentException("字段 Text 剥离前二字符后，不能设置为小于 3 字符");
             }
             else
             {
                 if (strText.Length < 3)
-                    throw new Exception("内嵌字段 Text 不能设置为小于 3 字符");
+                    throw new ArgumentException("内嵌字段 Text 不能设置为小于 3 字符");
             }
 
             string strFieldName = strText.Substring(0, 3);
@@ -540,7 +540,7 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 3)
-                    throw new Exception("Field的Name必须为3字符");
+                    throw new ArgumentException("Field的Name必须为3字符");
                 this.m_strName = strName;
             }
 
@@ -600,7 +600,7 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 3)
-                    throw new Exception("Field的Name必须为3字符");
+                    throw new ArgumentException("Field的Name必须为3字符");
                 this.m_strName = strName;
             }
 
@@ -664,9 +664,9 @@ namespace DigitalPlatform.Marc
                 if (this.IsHeader == true)
                 {
                     if (string.IsNullOrEmpty(value) == true)
-                        throw new Exception("头标区内容不能设置为空");
+                        throw new ArgumentException("头标区内容不能设置为空");
                     if (value.Length != 24)
-                        throw new Exception("头标区内容只能设置为24字符");
+                        throw new ArgumentException("头标区内容只能设置为24字符");
 
                     this.Content = value;
                     return;
@@ -689,10 +689,10 @@ namespace DigitalPlatform.Marc
             }
 
             if (string.IsNullOrEmpty(strText) == true)
-                throw new Exception("字段 Text 不能设置为空");
+                throw new ArgumentException("字段 Text 不能设置为空");
 
             if (strText.Length < 3)
-                throw new Exception("字段 Text 不能设置为小于 3 字符");
+                throw new ArgumentException("字段 Text 不能设置为小于 3 字符");
 
             string strFieldName = strText.Substring(0, 3);
             strText = strText.Substring(3); // 剩余部分
@@ -720,6 +720,7 @@ namespace DigitalPlatform.Marc
                 if (string.IsNullOrEmpty(strText) == true)
                 {
                     this.Indicator = DefaultIndicator;
+                    this.m_strContent = ""; // 2025/11/21
                     return;
                 }
 
@@ -728,6 +729,7 @@ namespace DigitalPlatform.Marc
                 {
                     Debug.Assert(strText.Length == 1, "");
                     this.Indicator = strText + new string(MarcQuery.DefaultChar, 1);
+                    this.m_strContent = ""; // 2025/11/21
                     return;
                 }
 
@@ -899,7 +901,7 @@ namespace DigitalPlatform.Marc
                 {
                     if (string.IsNullOrEmpty(value) == true)
                         return;
-                    throw new Exception("控制字段没有不能设置(非空的) Leading 内容");
+                    throw new ArgumentException("控制字段没有不能设置(非空的) Leading 内容");
                 }
                 this.m_strContent = value;
             }

@@ -71,14 +71,14 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 1)
-                    throw new Exception("Subfield的Name必须为1字符");
+                    throw new ArgumentException("Subfield的Name必须为1字符");
                 if (strName[0] == (char)31)
-                    throw new Exception("子字段名不允许包含 ASCII 31 字符");
+                    throw new ArgumentException("子字段名不允许包含 ASCII 31 字符");
 
                 this.Name = strName;
             }
             if (strContent.IndexOf((char)31) != -1)
-                throw new Exception("子字段内容字符串中不允许包含 ASCII 31 字符");
+                throw new ArgumentException("子字段内容字符串中不允许包含 ASCII 31 字符");
 
             this.Content = strContent;
         }
@@ -99,14 +99,14 @@ namespace DigitalPlatform.Marc
             else
             {
                 if (strName.Length != 1)
-                    throw new Exception("Subfield的Name必须为1字符");
+                    throw new ArgumentException("Subfield的Name必须为1字符");
                 if (strName[0] == (char)31)
-                    throw new Exception("子字段名不允许包含 ASCII 31 字符");
+                    throw new ArgumentException("子字段名不允许包含 ASCII 31 字符");
 
                 this.Name = strName;
             }
             if (strContent != null && strContent.IndexOf((char)31) != -1)
-                throw new Exception("子字段内容字符串中不允许包含 ASCII 31 字符");
+                throw new ArgumentException("子字段内容字符串中不允许包含 ASCII 31 字符");
 
             this.Content = strContent;
         }
@@ -126,11 +126,11 @@ namespace DigitalPlatform.Marc
             set
             {
                 if (string.IsNullOrEmpty(value) == true)
-                    throw new Exception("子字段的 Text 不能设置为空");
+                    throw new ArgumentException("子字段的 Text 不能设置为空");
                 if (value.Length <= 1)
-                    throw new Exception("子字段的 Text 不能设置为 1 字符的内容。至少要 2 字符，并且第一个字符必须为ASCII 31");
+                    throw new ArgumentException("子字段的 Text 不能设置为 1 字符的内容。至少要 2 字符，并且第一个字符必须为ASCII 31");
                 if (value[0] != (char)31)
-                    throw new Exception("子字段的 Text 第一个字符必须设置为ASCII 31");
+                    throw new ArgumentException("子字段的 Text 第一个字符必须设置为ASCII 31");
 
                 Debug.Assert(value.Length >= 2, "");
                 this.Name = value.Substring(1, 1);

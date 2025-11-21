@@ -13,7 +13,7 @@ namespace DigitalPlatform.Marc
     /// MarcNode 集合
     /// </summary>
     [Serializable]
-    public class MarcNodeList : IEnumerable
+    public class MarcNodeList : IEnumerable, IEnumerable<MarcNode>
     {
         List<MarcNode> m_list = new List<MarcNode>();
 
@@ -42,7 +42,15 @@ namespace DigitalPlatform.Marc
 
         #endregion
 
+        // 非泛型枚举器，保留以兼容旧代码
         IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.m_list.GetEnumerator();
+        }
+
+        // 2025/11/21
+        // 泛型枚举器，支持 foreach (MarcNode n in marcNodeList) 并启用 LINQ 泛型扩展
+        public IEnumerator<MarcNode> GetEnumerator()
         {
             return this.m_list.GetEnumerator();
         }

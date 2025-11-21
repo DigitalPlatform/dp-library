@@ -88,7 +88,7 @@ namespace DigitalPlatform.Marc
                     MarcNode node = this.ChildNodes[i];
 
                     if (node.NodeType != Marc.NodeType.Field)
-                        throw new Exception("根下级出现了不是 Field 类型的节点 (" + node.NodeType.ToString() + ")");
+                        throw new ArgumentException("根下级出现了不是 Field 类型的节点 (" + node.NodeType.ToString() + ")");
                     /*
                     if (i != 0 && node.Name != "hdr")
                         throw new Exception("MarcField同级第一个位置必须是Name为'hdr'的表示头标区的MarcField（而现在Name为 '" + node.Name + "'）");
