@@ -196,5 +196,19 @@ namespace UnitTestMarcQuery
             Assert.AreEqual(target, record.ToWorksheet());
         }
 
+        [TestMethod]
+        public void select_01()
+        {
+            var field = new MarcField("200", "  ");
+
+            (new MarcSubfield("a", "AAA")).prependTo(field);
+            (new MarcSubfield("b", "BBB")).prependTo(field);
+            (new MarcSubfield("c", "CCC")).prependTo(field);
+
+            var subfields = field.select("subfield[@name='a']");
+            Assert.AreEqual(1, subfields.count);
+            Assert.AreEqual("a", subfields[0].Name);
+            Assert.AreEqual("AAA", subfields[0].Content);
+        }
     }
 }
